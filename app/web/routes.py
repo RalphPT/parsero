@@ -29,6 +29,19 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/web/templates")
 
 
+def _initials(name: str) -> str:
+    """Iniciales del nombre para el avatar (Rafael Percca -> RP)."""
+    if not name:
+        return "?"
+    parts = name.strip().split()
+    if len(parts) == 1:
+        return parts[0][:1].upper()
+    return (parts[0][:1] + parts[-1][:1]).upper()
+
+
+templates.env.filters["initials"] = _initials
+
+
 # Cookie config - Secure=False en dev (no HTTPS), True en prod
 def _cookie_kwargs() -> dict:
     settings = get_settings()
@@ -397,9 +410,11 @@ async def dashboard(
         return _redirect("/login")
 
     keys = await ApiKeyRepository(db).list_for_tenant(tenant.id)
+
     # Usage del mes actual
     from sqlalchemy import func, select
     from app.db.models.usage_log import UsageLog
+    from app.db.models.extraction_job import ExtractionJob
     period = datetime.utcnow().strftime("%Y-%m")
     stmt = select(
         func.coalesce(func.sum(UsageLog.input_tokens), 0).label("input_tokens"),
@@ -414,8 +429,18 @@ async def dashboard(
         "output_tokens": int(row.output_tokens or 0),
     }
 
+    # Últimas 20 extracciones del tenant (historial)
+    jobs_stmt = (
+        select(ExtractionJob)
+        .where(ExtractionJob.tenant_id == tenant.id)
+        .order_by(ExtractionJob.created_at.desc())
+        .limit(20)
+    )
+    recent_jobs = (await db.execute(jobs_stmt)).scalars().all()
+
     rate_limit = RATE_LIMITS_PER_MINUTE.get(tenant.plan, 0)
     new_api_key = request.query_params.get("new_key")
+    toast = request.query_params.get("toast")
 
     return templates.TemplateResponse(
         request,
@@ -426,6 +451,40 @@ async def dashboard(
             "usage": usage,
             "rate_limit": rate_limit if rate_limit > 0 else "ilimitado",
             "new_api_key": new_api_key,
+            "recent_jobs": recent_jobs,
+            "toast": toast,
+        },
+    )
+
+
+@router.get("/dashboard/jobs/{job_id}", response_class=HTMLResponse)
+async def job_detail(
+    request: Request,
+    job_id: UUID,
+    parsero_session: Optional[str] = Cookie(default=None, alias=SESSION_COOKIE_NAME),
+    db: AsyncSession = Depends(get_db),
+):
+    """Detalle de una extracción: muestra el JSON resultado + metadata."""
+    tenant = await _session_or_none(parsero_session, db)
+    if tenant is None:
+        return _redirect("/login")
+
+    from app.db.models.extraction_job import ExtractionJob
+    from app.db.repositories.extraction_result import ExtractionResultRepository
+
+    job = await db.get(ExtractionJob, job_id)
+    if job is None or job.tenant_id != tenant.id:
+        return _redirect("/dashboard")
+
+    result = await ExtractionResultRepository(db).get_by_job_id(job_id)
+
+    return templates.TemplateResponse(
+        request,
+        "job_detail.html",
+        {
+            "tenant": tenant,
+            "job": job,
+            "result": result,
         },
     )
 
@@ -444,7 +503,7 @@ async def create_key(
         tenant_id=tenant.id, name=name or None
     )
     await db.commit()
-    return _redirect(f"/dashboard?new_key={raw_key}")
+    return _redirect(f"/dashboard?new_key={raw_key}&toast=key_created")
 
 
 @router.post("/dashboard/keys/{key_id}/revoke")
@@ -460,7 +519,7 @@ async def revoke_key(
         tenant_id=tenant.id, key_id=key_id, is_active=False
     )
     await db.commit()
-    return _redirect("/dashboard")
+    return _redirect("/dashboard?toast=key_revoked")
 
 
 @router.post("/dashboard/keys/{key_id}/reactivate")
@@ -476,7 +535,7 @@ async def reactivate_key(
         tenant_id=tenant.id, key_id=key_id, is_active=True
     )
     await db.commit()
-    return _redirect("/dashboard")
+    return _redirect("/dashboard?toast=key_reactivated")
 
 
 @router.post("/dashboard/upgrade")

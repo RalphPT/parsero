@@ -158,6 +158,43 @@
       100% { background-position: -200% 0; }
     }
 
+    /* Toast notifications */
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      min-width: 280px;
+      max-width: 380px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.15), 0 4px 10px -4px rgb(0 0 0 / 0.1);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.875rem;
+      transform: translateX(120%);
+      animation: toast-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .toast.leaving { animation: toast-out 0.25s ease-in forwards; }
+    @keyframes toast-in {
+      to { transform: translateX(0); }
+    }
+    @keyframes toast-out {
+      to { transform: translateX(120%); opacity: 0; }
+    }
+    .toast-success { background: rgb(236 253 245); border: 1px solid rgb(167 243 208); color: rgb(6 95 70); }
+    .toast-info    { background: rgb(239 246 255); border: 1px solid rgb(191 219 254); color: rgb(30 64 175); }
+    .dark .toast-success { background: rgb(6 95 70 / 0.2); border-color: rgb(6 95 70 / 0.5); color: rgb(167 243 208); }
+    .dark .toast-info    { background: rgb(30 64 175 / 0.2); border-color: rgb(30 64 175 / 0.5); color: rgb(191 219 254); }
+
     /* Scroll progress indicator */
     #scroll-progress {
       position: fixed;
@@ -175,6 +212,7 @@
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased transition-colors">
 
   <div id="scroll-progress"></div>
+  <div id="toast-container"></div>
 
   <header class="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -193,6 +231,9 @@
           <form method="post" action="/logout" class="inline">
             <button type="submit" class="px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-colors">Salir</button>
           </form>
+          <div class="ml-2 w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white grid place-items-center text-xs font-bold shadow-sm" title="{{ tenant.name }}">
+            {{ tenant.name | initials }}
+          </div>
         {% else %}
           <a href="/login" class="px-3 py-2 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-md transition-colors">Iniciar sesión</a>
           <a href="/signup" class="ml-1 px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 shadow-sm transition-all hover:shadow-md hover:-translate-y-px">
@@ -327,6 +368,42 @@
           ticking = true;
         }
       }, { passive: true });
+    })();
+
+    // Toast notifications. Disparable desde JS o vía ?toast=... en la URL.
+    window.showToast = function(message, type) {
+      type = type || 'success';
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const t = document.createElement('div');
+      t.className = 'toast toast-' + type;
+      const iconOk = '<svg style="flex-shrink:0;width:18px;height:18px;margin-top:1px" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+      const iconInfo = '<svg style="flex-shrink:0;width:18px;height:18px;margin-top:1px" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+      t.innerHTML = (type === 'info' ? iconInfo : iconOk) + '<span>' + message + '</span>';
+      container.appendChild(t);
+      setTimeout(() => {
+        t.classList.add('leaving');
+        setTimeout(() => t.remove(), 250);
+      }, 3500);
+    };
+
+    // Detectar ?toast=... en la URL al cargar
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const toast = params.get('toast');
+      if (!toast) return;
+      const messages = {
+        'key_created':     ['API key creada correctamente', 'success'],
+        'key_revoked':     ['API key revocada', 'info'],
+        'key_reactivated': ['API key reactivada', 'success'],
+      };
+      const m = messages[toast];
+      if (m) setTimeout(() => window.showToast(m[0], m[1]), 100);
+      // Limpia el query param para que no se quede pegado en la URL
+      params.delete('toast');
+      params.delete('new_key');
+      const clean = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+      window.history.replaceState({}, '', clean);
     })();
 
     // Animated counter para [data-counter]

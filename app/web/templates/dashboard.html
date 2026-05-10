@@ -186,11 +186,95 @@
       </div>
     {% else %}
       <div class="p-12 text-center">
-        <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <svg class="w-14 h-14 text-slate-300 dark:text-slate-700 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
-        <p class="text-slate-500 dark:text-slate-500 text-sm">Todavía no tienes API keys.</p>
-        <p class="text-slate-400 dark:text-slate-500 text-xs mt-1">Crea una con el botón de arriba.</p>
+        <p class="text-slate-700 dark:text-slate-300 font-semibold">Todavía no tienes API keys</p>
+        <p class="text-slate-500 dark:text-slate-500 text-sm mt-1 max-w-sm mx-auto">
+          Las API keys autentican tus llamadas a <code class="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">/api/v1/extract</code>.
+          Crea la primera con el botón de arriba.
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Historial de extracciones #}
+  <div class="mt-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800">
+      <div>
+        <h2 class="text-xl font-bold">Extracciones recientes</h2>
+        <p class="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Tus últimas 20 llamadas a la API</p>
+      </div>
+    </div>
+
+    {% if recent_jobs %}
+      <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50 dark:bg-slate-900/40 text-slate-600 dark:text-slate-400">
+          <tr>
+            <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider">Fecha</th>
+            <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider">Schema</th>
+            <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider">Status</th>
+            <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider hidden sm:table-cell">Tokens</th>
+            <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider hidden md:table-cell">Duración</th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for j in recent_jobs %}
+            <tr class="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <td class="px-6 py-4 text-xs text-slate-700 dark:text-slate-300">
+                <div class="font-medium">{{ j.created_at.strftime('%d/%m/%Y') }}</div>
+                <div class="text-slate-500 dark:text-slate-500">{{ j.created_at.strftime('%H:%M') }}</div>
+              </td>
+              <td class="px-6 py-4">
+                <code class="font-mono text-xs px-2 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-500 rounded">{{ j.schema_type.value }}</code>
+              </td>
+              <td class="px-6 py-4">
+                {% if j.status.value == 'completed' %}
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completado
+                  </span>
+                {% elif j.status.value == 'failed' %}
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-xs font-medium rounded">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Falló
+                  </span>
+                {% elif j.status.value == 'cached' %}
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 text-xs font-medium rounded">
+                    <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> Cache
+                  </span>
+                {% else %}
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-medium rounded">
+                    <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> {{ j.status.value }}
+                  </span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-500 tabular-nums hidden sm:table-cell">
+                {% if j.input_tokens or j.output_tokens %}
+                  {{ j.input_tokens or 0 }} / {{ j.output_tokens or 0 }}
+                {% else %}—{% endif %}
+              </td>
+              <td class="px-6 py-4 text-xs text-slate-500 dark:text-slate-500 tabular-nums hidden md:table-cell">
+                {% if j.duration_ms %}{{ (j.duration_ms / 1000)|round(1) }}s{% else %}—{% endif %}
+              </td>
+              <td class="px-6 py-4 text-right">
+                <a href="/dashboard/jobs/{{ j.id }}" class="text-brand-600 dark:text-brand-500 hover:underline text-sm font-medium">Ver</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    {% else %}
+      <div class="p-12 text-center">
+        <svg class="w-14 h-14 text-slate-300 dark:text-slate-700 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <p class="text-slate-700 dark:text-slate-300 font-semibold">Sin extracciones todavía</p>
+        <p class="text-slate-500 dark:text-slate-500 text-sm mt-1 max-w-sm mx-auto">
+          Cuando hagas tu primera llamada a <code class="font-mono text-xs bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">POST /api/v1/extract</code>,
+          la verás listada acá con su status y tokens consumidos.
+        </p>
       </div>
     {% endif %}
   </div>

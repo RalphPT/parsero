@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Extracción {{ job.id }} — Parsero{% endblock %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+
+  <a href="/dashboard" class="inline-flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white mb-6 transition-colors">
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+    </svg>
+    Volver al dashboard
+  </a>
+
+  <div class="flex items-start justify-between mb-8 flex-wrap gap-4">
+    <div>
+      <h1 class="text-3xl font-extrabold tracking-tight">Detalle de extracción</h1>
+      <p class="text-xs text-slate-500 dark:text-slate-500 font-mono mt-1">{{ job.id }}</p>
+    </div>
+    <div>
+      {% if job.status.value == 'completed' %}
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-sm font-semibold rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          Completado
+        </span>
+      {% elif job.status.value == 'failed' %}
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-400 text-sm font-semibold rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+          Falló
+        </span>
+      {% elif job.status.value == 'cached' %}
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-400 text-sm font-semibold rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span>
+          Cache hit
+        </span>
+      {% else %}
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-sm font-semibold rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+          {{ job.status.value }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider mb-1">Schema</div>
+      <div class="text-lg font-bold font-mono text-brand-600 dark:text-brand-500">{{ job.schema_type.value }}</div>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider mb-1">Tokens</div>
+      <div class="text-lg font-bold tabular-nums">{{ job.input_tokens or 0 }} <span class="text-xs text-slate-500 font-normal">in</span> / {{ job.output_tokens or 0 }} <span class="text-xs text-slate-500 font-normal">out</span></div>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider mb-1">Duración</div>
+      <div class="text-lg font-bold tabular-nums">{% if job.duration_ms %}{{ (job.duration_ms / 1000)|round(1) }}s{% else %}—{% endif %}</div>
+    </div>
+    <div class="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider mb-1">Creado</div>
+      <div class="text-sm font-semibold">{{ job.created_at.strftime('%d/%m/%Y') }}</div>
+      <div class="text-xs text-slate-500">{{ job.created_at.strftime('%H:%M') }} UTC</div>
+    </div>
+  </div>
+
+  {% if job.source_url %}
+  <div class="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 mb-6">
+    <div class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider mb-2">URL del documento</div>
+    <a href="{{ job.source_url }}" target="_blank" rel="noopener" class="text-sm font-mono text-brand-600 dark:text-brand-500 hover:underline break-all">{{ job.source_url }}</a>
+  </div>
+  {% endif %}
+
+  {% if job.error_message %}
+  <div class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900/50 p-5 rounded-xl mb-6">
+    <div class="text-xs uppercase font-semibold text-red-700 dark:text-red-400 tracking-wider mb-2">Error</div>
+    <p class="text-sm text-red-900 dark:text-red-200">{{ job.error_message }}</p>
+  </div>
+  {% endif %}
+
+  {% if result %}
+  <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-slate-800">
+      <h2 class="font-semibold">JSON extraído</h2>
+      <button id="copy-json" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-md text-xs font-medium transition-colors">
+        Copiar
+      </button>
+    </div>
+    <pre id="json-content" class="p-5 text-sm text-slate-200 bg-slate-950 overflow-x-auto font-mono leading-relaxed"><code>{{ result.data | tojson(indent=2) }}</code></pre>
+  </div>
+  {% else %}
+  <div class="bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-xl p-8 text-center text-slate-500">
+    No hay resultado disponible para este job.
+  </div>
+  {% endif %}
+
+</section>
+
+<script>
+  (function() {
+    const btn = document.getElementById('copy-json');
+    const pre = document.getElementById('json-content');
+    if (!btn || !pre) return;
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(pre.textContent.trim());
+        btn.textContent = 'Copiado ✓';
+        btn.classList.add('bg-emerald-600', 'text-white');
+        setTimeout(() => {
+          btn.textContent = 'Copiar';
+          btn.classList.remove('bg-emerald-600', 'text-white');
+        }, 1500);
+      } catch (e) {
+        btn.textContent = 'Error';
+      }
+    });
+  })();
+</script>
+{% endblock %}
