@@ -1,5 +1,7 @@
 """Endpoint demo público (sin auth, rate-limited por IP) para la landing page."""
 import json
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import ValidationError
@@ -20,9 +22,13 @@ router = APIRouter()
 
 VALID_SCHEMAS = frozenset({"invoice", "cv", "receipt"})
 
-# Máximo de extracciones que consumen tokens por IP por día
+# Máximo de extracciones que consumen tokens por IP por día (en su hora local)
 DEMO_LIMIT_PER_DAY = 3
-DEMO_TTL_SECONDS = 86400  # 24h
+
+# Default si el cliente no manda X-Timezone
+DEFAULT_TZ = ZoneInfo("UTC")
+# TTL holgado para que el key viejo expire después de la fecha que representa
+KEY_TTL_SECONDS = 48 * 3600
 
 
 def _client_ip(request: Request) -> str:
@@ -33,11 +39,28 @@ def _client_ip(request: Request) -> str:
     return request.client.host if request.client else "unknown"
 
 
+def _client_tz(request: Request) -> ZoneInfo:
+    """Lee la timezone del navegador del cliente (header X-Timezone con nombre IANA)."""
+    name = request.headers.get("x-timezone")
+    if not name:
+        return DEFAULT_TZ
+    try:
+        return ZoneInfo(name)
+    except (ZoneInfoNotFoundError, ValueError):
+        return DEFAULT_TZ
+
+
+def _today_key(ip: str, tz: ZoneInfo) -> str:
+    """Key de Redis que incluye la fecha local del cliente. Reset a las 00:00 de su zona."""
+    today = datetime.now(tz).strftime("%Y-%m-%d")
+    return f"demo:ip:{ip}:{today}"
+
+
 async def _consume_quota(redis, redis_key: str) -> int:
     """Incrementa el contador y le pone TTL si es la primera vez."""
     count = await redis.incr(redis_key)
     if count == 1:
-        await redis.expire(redis_key, DEMO_TTL_SECONDS)
+        await redis.expire(redis_key, KEY_TTL_SECONDS)
     return count
 
 
@@ -60,17 +83,23 @@ async def demo_extract(
 
     # Verificar quota ANTES de hacer trabajo costoso (sin incrementar todavía)
     ip = _client_ip(request)
-    redis_key = f"demo:ip:{ip}"
+    tz = _client_tz(request)
+    redis_key = _today_key(ip, tz)
     current_raw = await redis.get(redis_key)
     current = int(current_raw) if current_raw else 0
     if current >= DEMO_LIMIT_PER_DAY:
+        # Segundos hasta la próxima medianoche en la zona del cliente
+        now = datetime.now(tz)
+        tomorrow = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        retry_after = int((tomorrow - now).total_seconds())
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail=(
-                f"Límite de {DEMO_LIMIT_PER_DAY} demos por día alcanzado. "
-                "Crea una cuenta gratis en /signup para 10 requests por minuto."
+                f"Límite de {DEMO_LIMIT_PER_DAY} demos alcanzado por hoy. "
+                f"Se reinicia a las 00:00 hora local ({tz}). "
+                "Para uso continuo crea una cuenta gratis en /signup (10 requests/min)."
             ),
-            headers={"Retry-After": str(DEMO_TTL_SECONDS)},
+            headers={"Retry-After": str(retry_after)},
         )
 
     # Descargar documento. Si falla, NO consume quota (es error del input).

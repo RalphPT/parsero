@@ -460,9 +460,14 @@
       result.hidden = false;
 
       try {
+        // Mandamos la timezone del navegador para que el reset diario use medianoche local
+        const tz = (Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || 'UTC';
         const r = await fetch('/api/v1/demo/extract', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Timezone': tz,
+          },
           body: JSON.stringify({
             document_url: urlInput.value,
             schema_type: schemaSel.value,
