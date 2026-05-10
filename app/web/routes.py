@@ -291,7 +291,7 @@ async def reset_submit(
             request,
             "reset_password.html",
             {"tenant": None, "token": token,
-             "flash_error": "Link expirado. Pedí uno nuevo desde 'Olvidaste tu contraseña'."},
+             "flash_error": "Link expirado. Pide uno nuevo desde 'Olvidaste tu contraseña'."},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
     except pyjwt.PyJWTError:
