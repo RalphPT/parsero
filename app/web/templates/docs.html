@@ -62,7 +62,7 @@
             <button type="button" class="tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 dark:text-slate-500 rounded hover:bg-slate-800 transition-colors" data-lang="javascript">JavaScript</button>
           </div>
 
-<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="curl"><code><span class="text-emerald-400">curl</span> -X POST https://parsero-production.up.railway.app/api/v1/extract \
+<pre class="p-5 text-sm text-slate-200 font-mono leading-relaxed overflow-x-auto" data-lang="curl"><code><span class="text-emerald-400">curl</span> -X POST https://parsero-production.up.railway.app/api/v1/extract \
   -H <span class="text-amber-300">"Authorization: Bearer psr_xxx"</span> \
   -H <span class="text-amber-300">"Content-Type: application/json"</span> \
   -d <span class="text-amber-300">'{
@@ -70,7 +70,7 @@
     "schema_type": "invoice"
   }'</span></code></pre>
 
-<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="python" hidden><code><span class="text-violet-300">import</span> httpx
+<pre class="p-5 text-sm text-slate-200 font-mono leading-relaxed overflow-x-auto" data-lang="python" hidden><code><span class="text-violet-300">import</span> httpx
 
 response = httpx.post(
     <span class="text-amber-300">"https://parsero-production.up.railway.app/api/v1/extract"</span>,
@@ -83,7 +83,7 @@ response = httpx.post(
 )
 <span class="text-violet-300">print</span>(response.json())</code></pre>
 
-<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="javascript" hidden><code><span class="text-violet-300">const</span> response = <span class="text-violet-300">await</span> fetch(
+<pre class="p-5 text-sm text-slate-200 font-mono leading-relaxed overflow-x-auto" data-lang="javascript" hidden><code><span class="text-violet-300">const</span> response = <span class="text-violet-300">await</span> fetch(
   <span class="text-amber-300">"https://parsero-production.up.railway.app/api/v1/extract"</span>,
   {
     method: <span class="text-amber-300">"POST"</span>,

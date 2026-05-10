@@ -31,7 +31,7 @@
           </p>
           <div class="mt-4 flex gap-2">
             <input type="text" readonly value="{{ new_api_key }}" id="newkey"
-                   class="flex-1 font-mono text-sm px-3 py-2 border border-amber-300 rounded-lg bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500">
+                   class="flex-1 font-mono text-sm px-3 py-2 border border-amber-300 dark:border-amber-700 rounded-lg bg-white dark:bg-slate-950 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
             <button onclick="navigator.clipboard.writeText(document.getElementById('newkey').value); this.textContent='Copiado'; this.classList.remove('bg-amber-600','hover:bg-amber-700'); this.classList.add('bg-emerald-600');"
                     class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 text-sm font-medium transition-colors">
               Copiar
