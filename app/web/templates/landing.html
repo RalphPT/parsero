@@ -25,13 +25,13 @@
       <a href="/signup" class="w-full sm:w-auto px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 shadow-sm transition-all">
         Empezar gratis
       </a>
-      <a href="/pricing" class="w-full sm:w-auto px-6 py-3 bg-white text-slate-700 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
-        Ver precios
+      <a href="#try-it" class="w-full sm:w-auto px-6 py-3 bg-white text-slate-700 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
+        Probar sin cuenta
       </a>
     </div>
 
     <p class="mt-6 text-xs text-slate-500">
-      10 requests/min gratis. Sin tarjeta de crédito.
+      10 requests/min gratis. Sin tarjeta de credito.
     </p>
   </div>
 </section>
@@ -62,11 +62,51 @@
   </div>
 </section>
 
+<section id="try-it" class="bg-white border-y border-slate-200 scroll-mt-20">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Probalo ahora</h2>
+      <p class="mt-3 text-slate-600">
+        3 demos gratis por dia, sin crear cuenta. Pega la URL de un PDF publico.
+      </p>
+    </div>
+
+    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8">
+      <form id="demo-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1.5">URL del documento</label>
+          <input type="url" id="demo-url" required placeholder="https://example.com/factura.pdf"
+                 class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow font-mono text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tipo de documento</label>
+          <select id="demo-schema"
+                  class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
+            <option value="invoice">Factura (invoice)</option>
+            <option value="cv">CV / Resume (cv)</option>
+            <option value="receipt">Recibo (receipt)</option>
+          </select>
+        </div>
+        <button type="submit" id="demo-submit"
+                class="w-full px-4 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          <span id="demo-submit-text">Extraer ahora</span>
+        </button>
+      </form>
+
+      <div id="demo-result" class="mt-6" hidden></div>
+    </div>
+
+    <p class="mt-4 text-xs text-slate-500 text-center">
+      Sin login. Limite por IP. Para uso continuo, <a href="/signup" class="text-brand-600 hover:underline">crea una cuenta gratis</a>.
+    </p>
+  </div>
+</section>
+
 <section class="bg-slate-50 border-y border-slate-200">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20">
     <div class="text-center mb-14">
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Tres pasos</h2>
-      <p class="mt-3 text-slate-600">Sin SDK, sin configuración. Solo HTTP.</p>
+      <p class="mt-3 text-slate-600">Sin SDK, sin configuracion. Solo HTTP.</p>
     </div>
 
     <div class="grid md:grid-cols-3 gap-6">
@@ -74,7 +114,7 @@
         <div class="w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold mb-4">1</div>
         <h3 class="font-semibold text-lg">Crea tu cuenta</h3>
         <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-          Email + contraseña. Verificas el correo y recibes tu primera API key
+          Email + contrasena. Verificas el correo y recibes tu primera API key
           al instante.
         </p>
       </div>
@@ -100,112 +140,248 @@
 
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
   <div class="text-center mb-14">
-    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Por qué Parsero</h2>
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Casos de uso</h2>
     <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
-      Una API hecha por developers para developers. Sin features de más.
+      Donde Parsero reemplaza dias de trabajo manual o miles de lineas de regex.
     </p>
   </div>
 
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <polyline points="13 2 13 10 21 10 11 22 11 14 3 14 13 2"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">Rápido</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        Menos de 5 segundos por documento. Cache por hash: si pediste el
-        mismo PDF antes, la segunda vez es instantáneo.
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="p-6 rounded-xl border border-slate-200 bg-white">
+      <h3 class="font-semibold text-lg">Empresas de contabilidad</h3>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+        Digitalizar facturas de proveedores en lugar de tipear vendor, totales
+        e items uno por uno. Tus contadores ven los datos ya estructurados.
       </p>
+      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: invoice</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">JSON validado</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        Schemas Pydantic por cada tipo. Tipos correctos garantizados o
-        respuesta 422.
+    <div class="p-6 rounded-xl border border-slate-200 bg-white">
+      <h3 class="font-semibold text-lg">Software de RH (ATS)</h3>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+        Parsear CVs entrantes y extraer experiencia, educacion y skills
+        automaticamente. Tus reclutadores filtran por campos, no por keywords.
       </p>
+      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: cv</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">API keys revocables</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        Hasheamos cada key con SHA-256 antes de guardarla. Revoca o rota
-        desde el dashboard cuando quieras.
+    <div class="p-6 rounded-xl border border-slate-200 bg-white">
+      <h3 class="font-semibold text-lg">Apps fintech personales</h3>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+        El usuario sube fotos de recibos desde su celular. Tu app los categoriza
+        y suma totales sin pedirle que escriba nada.
       </p>
+      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: receipt</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">Tracking de uso</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        Cada request queda registrado con tokens consumidos. El dashboard te
-        muestra el consumo del mes en tiempo real.
+    <div class="p-6 rounded-xl border border-slate-200 bg-white">
+      <h3 class="font-semibold text-lg">Plataformas legaltech</h3>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
+        Indexar contratos, facturas legales y otros documentos por las partes,
+        montos y fechas. Busqueda y reporting reales sobre PDFs.
       </p>
-    </div>
-
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">Rate limiting por plan</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        10 req/min en free, 100 en starter, 500 en pro. Bucket por minuto en
-        Redis, sin sorpresas.
-      </p>
-    </div>
-
-    <div class="p-6 rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all">
-      <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-        </svg>
-      </div>
-      <h3 class="font-semibold">Stack abierto</h3>
-      <p class="mt-2 text-sm text-slate-600">
-        FastAPI, Postgres, Redis, Gemini. Sin lock-in: cambias el provider
-        de LLM en una clase.
-      </p>
+      <div class="mt-3 inline-block px-2 py-1 bg-slate-100 text-slate-600 text-xs font-mono rounded">contract: en roadmap</div>
     </div>
   </div>
 </section>
 
-<section class="bg-slate-50 border-t border-slate-200">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Schemas disponibles</h2>
-      <p class="mt-3 text-slate-600">Tres tipos hoy. Más en camino.</p>
+<section class="bg-slate-50 border-y border-slate-200">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Por que Parsero</h2>
+      <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
+        Una API hecha por developers para developers. Sin features de mas.
+      </p>
     </div>
-    <div class="grid sm:grid-cols-3 gap-4">
-      <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-        <div class="text-2xl font-bold font-mono text-brand-600">invoice</div>
-        <p class="mt-2 text-xs text-slate-500">Vendor, customer, line items, totales, IVA, moneda.</p>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <polyline points="13 2 13 10 21 10 11 22 11 14 3 14 13 2"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">Rapido</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Menos de 5 segundos por documento. Cache por hash: si pediste el
+          mismo PDF antes, la segunda vez es instantaneo.
+        </p>
       </div>
-      <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-        <div class="text-2xl font-bold font-mono text-brand-600">cv</div>
-        <p class="mt-2 text-xs text-slate-500">Personal, experience, education, skills, certifications.</p>
+
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">JSON validado</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Schemas Pydantic por cada tipo. Tipos correctos garantizados o
+          respuesta 422.
+        </p>
       </div>
-      <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-        <div class="text-2xl font-bold font-mono text-brand-600">receipt</div>
-        <p class="mt-2 text-xs text-slate-500">Merchant, items, totales, método de pago, ID transacción.</p>
+
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">API keys revocables</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Hasheamos cada key con SHA-256 antes de guardarla. Revoca o rota
+          desde el dashboard cuando quieras.
+        </p>
       </div>
+
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">Tracking de uso</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          Cada request queda registrado con tokens consumidos. El dashboard te
+          muestra el consumo del mes en tiempo real.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">Rate limiting por plan</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          10 req/min en free, 100 en starter, 500 en pro. Bucket por minuto en
+          Redis, sin sorpresas.
+        </p>
+      </div>
+
+      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
+        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <h3 class="font-semibold">Stack abierto</h3>
+        <p class="mt-2 text-sm text-slate-600">
+          FastAPI, Postgres, Redis, Gemini. Sin lock-in: cambias el provider
+          de LLM en una clase.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+  <div class="text-center mb-12">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Schemas disponibles</h2>
+    <p class="mt-3 text-slate-600">Tres tipos hoy. Mas en camino.</p>
+  </div>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
+      <div class="text-2xl font-bold font-mono text-brand-600">invoice</div>
+      <p class="mt-2 text-xs text-slate-500">Vendor, customer, line items, totales, IVA, moneda.</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
+      <div class="text-2xl font-bold font-mono text-brand-600">cv</div>
+      <p class="mt-2 text-xs text-slate-500">Personal, experience, education, skills, certifications.</p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
+      <div class="text-2xl font-bold font-mono text-brand-600">receipt</div>
+      <p class="mt-2 text-xs text-slate-500">Merchant, items, totales, metodo de pago, ID transaccion.</p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50 border-y border-slate-200">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Privacidad y seguridad</h2>
+      <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
+        Lo que hacemos (y no hacemos) con tus datos.
+      </p>
+    </div>
+
+    <div class="space-y-3">
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group" open>
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>Guardan mis documentos?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          No guardamos el PDF. Solo persistimos el hash SHA-256 (para el cache),
+          el JSON extraido y los tokens consumidos. El binario del documento se
+          procesa en memoria y se descarta.
+        </p>
+      </details>
+
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>Que LLM usan por debajo?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Gemini 2.5 Flash de Google. El texto extraido del PDF viaja a la API
+          de Google segun
+          <a href="https://ai.google.dev/gemini-api/terms" class="text-brand-600 hover:underline">su politica de privacidad</a>.
+          Si tu caso requiere un proveedor especifico (Claude, modelo on-prem),
+          escribinos.
+        </p>
+      </details>
+
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>Donde esta hosteado?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Railway en region US-West. Postgres y Redis tambien estan en Railway,
+          en la misma region. Si necesitas data residency en EU o LATAM,
+          escribinos para coordinar.
+        </p>
+      </details>
+
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>Como protegen mis API keys?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Hasheamos cada key con SHA-256 al crearla. La key en claro se muestra
+          una vez en el dashboard y nunca mas. Aunque alguien acceda a la BD,
+          no puede recuperar las keys originales. Podes revocar y rotar
+          cuando quieras.
+        </p>
+      </details>
+
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>Son GDPR / SOC2 compliant?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Por ahora no formalmente, somos v0.1. Si tu caso de uso requiere
+          certificacion, escribinos a hola@parsero.dev y armamos un plan
+          a medida (DPA, region especifica, etc.).
+        </p>
+      </details>
+
+      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>El codigo es open source?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Si.
+          <a href="https://github.com/RalphPT/parsero" class="text-brand-600 hover:underline">github.com/RalphPT/parsero</a>.
+          Podes auditar como manejamos auth, rate limiting y persistencia.
+          Si encontras algo, abri un issue o escribinos.
+        </p>
+      </details>
     </div>
   </div>
 </section>
@@ -221,5 +397,70 @@
     </a>
   </div>
 </section>
+
+<script>
+  (function() {
+    const form = document.getElementById('demo-form');
+    if (!form) return;
+    const urlInput = document.getElementById('demo-url');
+    const schemaSel = document.getElementById('demo-schema');
+    const submitBtn = document.getElementById('demo-submit');
+    const submitText = document.getElementById('demo-submit-text');
+    const result = document.getElementById('demo-result');
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitText.textContent = 'Procesando... (puede tardar 5-10 seg)';
+      result.hidden = true;
+
+      try {
+        const r = await fetch('/api/v1/demo/extract', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            document_url: urlInput.value,
+            schema_type: schemaSel.value,
+          }),
+        });
+        const body = await r.json();
+
+        if (!r.ok) {
+          result.innerHTML = `
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
+              <div class="font-semibold text-red-900 mb-1">Error ${r.status}</div>
+              <div class="text-red-800">${escapeHtml(body.detail || 'Error desconocido')}</div>
+            </div>`;
+        } else {
+          const remaining = body.demos_remaining ?? '?';
+          result.innerHTML = `
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-sm text-emerald-900 mb-3">
+              Extraccion exitosa. ${body.input_tokens} tokens in / ${body.output_tokens} out.
+              Te quedan <strong>${remaining}</strong> demos hoy.
+            </div>
+            <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto text-xs font-mono leading-relaxed max-h-96"><code>${escapeHtml(JSON.stringify(body.data, null, 2))}</code></pre>
+          `;
+        }
+        result.hidden = false;
+      } catch (err) {
+        result.innerHTML = `
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
+            <div class="font-semibold text-red-900 mb-1">Error de red</div>
+            <div class="text-red-800">${escapeHtml(err.message)}</div>
+          </div>`;
+        result.hidden = false;
+      } finally {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Extraer ahora';
+      }
+    });
+  })();
+</script>
 
 {% endblock %}

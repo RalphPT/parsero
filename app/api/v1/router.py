@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import account, admin, auth, billing, tenants, extraction
+from app.api.v1.endpoints import account, admin, auth, billing, demo, tenants, extraction
 
 router = APIRouter()
 router.include_router(admin.router,       prefix="/admin", tags=["admin"])
@@ -9,3 +9,4 @@ router.include_router(extraction.router,                   tags=["extraction"])
 router.include_router(auth.router,                         tags=["auth"])
 router.include_router(billing.router,                      tags=["billing"])
 router.include_router(account.router,                      tags=["account"])
+router.include_router(demo.router,                         tags=["demo"])
