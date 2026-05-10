@@ -7,10 +7,10 @@
   <div class="flex items-start justify-between mb-10 flex-wrap gap-4">
     <div>
       <h1 class="text-3xl font-extrabold tracking-tight">Hola, {{ tenant.name.split(' ')[0] }}</h1>
-      <p class="text-slate-500 mt-1 text-sm">{{ tenant.email }}</p>
+      <p class="text-slate-500 dark:text-slate-500 mt-1 text-sm">{{ tenant.email }}</p>
     </div>
     <div class="flex items-center gap-3">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-sm font-medium">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium">
         <span class="w-1.5 h-1.5 rounded-full {% if tenant.subscription_status == 'active' %}bg-emerald-500{% elif tenant.subscription_status == 'past_due' %}bg-amber-500{% else %}bg-slate-400{% endif %}"></span>
         Plan {{ tenant.plan.value|capitalize }}
       </div>
@@ -18,20 +18,20 @@
   </div>
 
   {% if new_api_key %}
-    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 mb-8">
+    <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-5 mb-8">
       <div class="flex items-start gap-3">
-        <svg class="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
         </svg>
         <div class="flex-1">
-          <div class="font-semibold text-amber-900">Nueva API key creada</div>
-          <p class="text-sm text-amber-800 mt-1">
+          <div class="font-semibold text-amber-900 dark:text-amber-200">Nueva API key creada</div>
+          <p class="text-sm text-amber-800 dark:text-amber-300 mt-1">
             Cópiala ahora. Por seguridad solo se muestra esta vez -
             si la pierdes tendrás que generar una nueva.
           </p>
           <div class="mt-4 flex gap-2">
             <input type="text" readonly value="{{ new_api_key }}" id="newkey"
-                   class="flex-1 font-mono text-sm px-3 py-2 border border-amber-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+                   class="flex-1 font-mono text-sm px-3 py-2 border border-amber-300 rounded-lg bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500">
             <button onclick="navigator.clipboard.writeText(document.getElementById('newkey').value); this.textContent='Copiado'; this.classList.remove('bg-amber-600','hover:bg-amber-700'); this.classList.add('bg-emerald-600');"
                     class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 text-sm font-medium transition-colors">
               Copiar
@@ -44,47 +44,47 @@
 
   <div class="grid md:grid-cols-3 gap-4 mb-8">
 
-    <div class="bg-white p-6 rounded-xl border border-slate-200">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs uppercase font-semibold text-slate-500 tracking-wider">Uso del mes</span>
-        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Uso del mes</span>
+        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
         </svg>
       </div>
       <div class="text-3xl font-extrabold tracking-tight">{{ usage.extractions_count }}</div>
-      <div class="text-sm text-slate-500">extracciónes en {{ usage.billing_period }}</div>
-      <div class="mt-3 pt-3 border-t border-slate-100 flex justify-between text-xs text-slate-500">
+      <div class="text-sm text-slate-500 dark:text-slate-500">extracciónes en {{ usage.billing_period }}</div>
+      <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs text-slate-500 dark:text-slate-500">
         <span>{{ usage.input_tokens }} tokens in</span>
         <span>{{ usage.output_tokens }} tokens out</span>
       </div>
     </div>
 
-    <div class="bg-white p-6 rounded-xl border border-slate-200">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs uppercase font-semibold text-slate-500 tracking-wider">Plan actual</span>
-        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Plan actual</span>
+        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       </div>
       <div class="text-3xl font-extrabold tracking-tight">{{ tenant.plan.value|capitalize }}</div>
-      <div class="text-sm text-slate-500">{{ rate_limit }} requests/minuto</div>
+      <div class="text-sm text-slate-500 dark:text-slate-500">{{ rate_limit }} requests/minuto</div>
       {% if tenant.subscription_renews_at %}
-      <div class="mt-3 pt-3 border-t border-slate-100 text-xs text-slate-500">
+      <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-500">
         Renueva el {{ tenant.subscription_renews_at.strftime('%d/%m/%Y') }}
       </div>
       {% endif %}
     </div>
 
-    <div class="bg-white p-6 rounded-xl border border-slate-200">
+    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
-        <span class="text-xs uppercase font-semibold text-slate-500 tracking-wider">Suscripción</span>
-        <svg class="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Suscripción</span>
+        <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>
         </svg>
       </div>
       {% if tenant.lemon_subscription_id %}
         <form method="post" action="/dashboard/portal" class="mt-1">
-          <button type="submit" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-semibold transition-colors">
+          <button type="submit" class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:bg-slate-900/40 text-sm font-semibold transition-colors">
             Gestionar suscripción
           </button>
         </form>
@@ -93,7 +93,7 @@
           <button type="submit" name="plan" value="starter" class="w-full px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 text-sm font-semibold transition-colors">
             Actualizar a Starter - $19
           </button>
-          <button type="submit" name="plan" value="pro" class="w-full px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-semibold transition-colors">
+          <button type="submit" name="plan" value="pro" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:bg-slate-900/40 text-sm font-semibold transition-colors">
             Actualizar a Pro - $79
           </button>
         </form>
@@ -112,7 +112,7 @@
   -H "Content-Type: application/json" \
   -d '{"document_url": "https://example.com/factura.pdf",
        "schema_type": "invoice"}'</code></pre>
-    <p class="text-slate-400 text-xs mt-4">
+    <p class="text-slate-400 dark:text-slate-500 text-xs mt-4">
       Schemas disponibles: <code class="font-mono text-amber-300">invoice</code>,
       <code class="font-mono text-amber-300">cv</code>,
       <code class="font-mono text-amber-300">receipt</code>
@@ -120,15 +120,15 @@
   </div>
   {% endif %}
 
-  <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
-    <div class="flex items-center justify-between p-6 border-b border-slate-200 flex-wrap gap-3">
+  <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div class="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 flex-wrap gap-3">
       <div>
         <h2 class="text-xl font-bold">API keys</h2>
-        <p class="text-xs text-slate-500 mt-0.5">Usa estas keys en el header <code class="font-mono">Authorization: Bearer &lt;key&gt;</code></p>
+        <p class="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Usa estas keys en el header <code class="font-mono">Authorization: Bearer &lt;key&gt;</code></p>
       </div>
       <form method="post" action="/dashboard/keys/new" class="flex items-center gap-2">
         <input type="text" name="name" placeholder="Nombre (opciónal)" maxlength="80"
-               class="px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
+               class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
         <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors">
           Nueva key
         </button>
@@ -138,7 +138,7 @@
     {% if keys %}
       <div class="overflow-x-auto">
       <table class="w-full text-sm">
-        <thead class="bg-slate-50 text-slate-600">
+        <thead class="bg-slate-50 dark:bg-slate-900/40 text-slate-600 dark:text-slate-400">
           <tr>
             <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider">Prefix</th>
             <th class="text-left px-6 py-3 text-xs uppercase font-semibold tracking-wider">Nombre</th>
@@ -149,33 +149,33 @@
         </thead>
         <tbody>
           {% for k in keys %}
-            <tr class="border-t border-slate-100 hover:bg-slate-50/50 transition-colors">
-              <td class="px-6 py-4 font-mono text-xs sm:text-sm text-slate-700">{{ k.key_prefix }}...</td>
+            <tr class="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900/40/50 transition-colors">
+              <td class="px-6 py-4 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300">{{ k.key_prefix }}...</td>
               <td class="px-6 py-4">{{ k.name or '-' }}</td>
               <td class="px-6 py-4">
                 {% if k.is_active %}
-                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 text-emerald-700 text-xs font-medium rounded">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 text-xs font-medium rounded">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                     Activa
                   </span>
                 {% else %}
-                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded">
+                  <span class="inline-flex items-center gap-1.5 px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-medium rounded">
                     <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
                     Revocada
                   </span>
                 {% endif %}
               </td>
-              <td class="px-6 py-4 text-slate-500 text-xs">
+              <td class="px-6 py-4 text-slate-500 dark:text-slate-500 text-xs">
                 {{ k.last_used_at.strftime('%d/%m/%Y %H:%M') if k.last_used_at else '-' }}
               </td>
               <td class="px-6 py-4 text-right">
                 {% if k.is_active %}
                   <form method="post" action="/dashboard/keys/{{ k.id }}/revoke" class="inline">
-                    <button type="submit" class="text-red-600 hover:text-red-700 hover:underline text-sm font-medium">Revocar</button>
+                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:text-red-300 hover:underline text-sm font-medium">Revocar</button>
                   </form>
                 {% else %}
                   <form method="post" action="/dashboard/keys/{{ k.id }}/reactivate" class="inline">
-                    <button type="submit" class="text-slate-600 hover:text-slate-900 hover:underline text-sm font-medium">Reactivar</button>
+                    <button type="submit" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:underline text-sm font-medium">Reactivar</button>
                   </form>
                 {% endif %}
               </td>
@@ -189,8 +189,8 @@
         <svg class="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
         </svg>
-        <p class="text-slate-500 text-sm">Todavía no tienes API keys.</p>
-        <p class="text-slate-400 text-xs mt-1">Crea una con el botón de arriba.</p>
+        <p class="text-slate-500 dark:text-slate-500 text-sm">Todavía no tienes API keys.</p>
+        <p class="text-slate-400 dark:text-slate-500 text-xs mt-1">Crea una con el botón de arriba.</p>
       </div>
     {% endif %}
   </div>

@@ -4,47 +4,55 @@
 {% block content %}
 
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0 -z-10 bg-gradient-to-b from-slate-50 to-white"></div>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-20 sm:pt-28 pb-16 text-center">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-xs text-slate-600 mb-8 shadow-sm">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-      <span>v0.1 disponible - free tier sin tarjeta</span>
+  <div class="absolute inset-0 -z-10 mesh-bg"></div>
+  <div class="absolute inset-0 -z-10 dot-grid opacity-40"></div>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-20 text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-slate-900/80 backdrop-blur border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 mb-8 shadow-sm">
+      <span class="relative flex w-2 h-2">
+        <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75 animate-ping"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span>v0.1 disponible — free tier sin tarjeta</span>
     </div>
 
-    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.1]">
-      De <span class="line-through text-slate-400">parsear PDFs</span><br class="hidden sm:inline">
-      a <span class="text-brand-600">una llamada HTTP</span>.
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.05]">
+      De <span class="line-through text-slate-400 dark:text-slate-600">parsear PDFs</span><br class="hidden sm:inline">
+      a una llamada
+      <span class="bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent">HTTP</span>.
     </h1>
 
-    <p class="mt-6 text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+    <p class="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
       Mandas el URL de una factura, CV o recibo. Te devolvemos un JSON limpio,
       validado y listo para tu base de datos. Sin scraping, sin regex.
     </p>
 
     <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-      <a href="/signup" class="w-full sm:w-auto px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 shadow-sm transition-all">
+      <a href="/signup" class="group w-full sm:w-auto px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 shadow-lg shadow-slate-900/10 dark:shadow-white/10 transition-all hover:-translate-y-px hover:shadow-xl">
         Empezar gratis
+        <span class="inline-block transition-transform group-hover:translate-x-0.5">→</span>
       </a>
-      <a href="#try-it" class="w-full sm:w-auto px-6 py-3 bg-white text-slate-700 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
+      <a href="#try-it" class="w-full sm:w-auto px-6 py-3 bg-white/80 dark:bg-slate-900/80 backdrop-blur text-slate-700 dark:text-slate-200 border border-slate-300 dark:border-slate-700 rounded-lg font-semibold hover:bg-white dark:hover:bg-slate-800 transition-all">
         Probar sin cuenta
       </a>
     </div>
 
-    <p class="mt-6 text-xs text-slate-500">
+    <p class="mt-6 text-xs text-slate-500 dark:text-slate-500">
       10 requests/min gratis. Sin tarjeta de crédito.
     </p>
   </div>
 </section>
 
-<section class="max-w-5xl mx-auto px-4 sm:px-6 -mt-4 mb-24">
-  <div class="rounded-2xl bg-slate-900 shadow-2xl overflow-hidden">
-    <div class="flex items-center gap-2 px-4 py-3 border-b border-slate-700/50">
+<section class="max-w-5xl mx-auto px-4 sm:px-6 -mt-4 mb-24 reveal">
+  <div class="rounded-2xl bg-slate-950 dark:bg-slate-900 border border-slate-800 shadow-2xl shadow-slate-900/20 overflow-hidden">
+    <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800">
       <div class="flex gap-1.5">
-        <div class="w-3 h-3 rounded-full bg-red-500/60"></div>
-        <div class="w-3 h-3 rounded-full bg-yellow-500/60"></div>
-        <div class="w-3 h-3 rounded-full bg-emerald-500/60"></div>
+        <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
+        <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
+        <div class="w-3 h-3 rounded-full bg-emerald-500/70"></div>
       </div>
-      <span class="ml-2 text-xs text-slate-400 font-mono">request.sh</span>
+      <span class="ml-3 text-xs text-slate-500 font-mono">~/parsero/extract.sh</span>
+      <span class="ml-auto text-xs text-slate-600 font-mono hidden sm:inline">curl</span>
     </div>
     <pre class="p-6 text-sm overflow-x-auto font-mono leading-relaxed"><code><span class="text-slate-500"># Mandas un PDF</span>
 <span class="text-emerald-400">curl</span> -X POST https://parsero.dev/api/v1/extract \
@@ -62,33 +70,34 @@
   </div>
 </section>
 
-<section id="try-it" class="bg-white border-y border-slate-200 scroll-mt-20">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+<section id="try-it" class="bg-slate-50 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20 reveal">
     <div class="text-center mb-10">
+      <span class="inline-block px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 text-xs font-semibold uppercase tracking-wider mb-3">Demo en vivo</span>
       <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Pruébalo ahora</h2>
-      <p class="mt-3 text-slate-600">
-        3 demos gratis por dia, sin crear cuenta. Pega la URL de un PDF público.
+      <p class="mt-3 text-slate-600 dark:text-slate-400">
+        3 demos gratis por día, sin crear cuenta. Pega la URL de un PDF público.
       </p>
     </div>
 
-    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 sm:p-8">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
       <form id="demo-form" class="space-y-4">
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">URL del documento</label>
+          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">URL del documento</label>
           <input type="url" id="demo-url" required placeholder="https://example.com/factura.pdf"
-                 class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow font-mono text-sm">
+                 class="w-full px-3 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-shadow font-mono text-sm">
         </div>
         <div>
-          <label class="block text-sm font-semibold text-slate-700 mb-1.5">Tipo de documento</label>
+          <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Tipo de documento</label>
           <select id="demo-schema"
-                  class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
+                  class="w-full px-3 py-2.5 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-shadow">
             <option value="invoice">Factura (invoice)</option>
             <option value="cv">CV / Resume (cv)</option>
             <option value="receipt">Recibo (receipt)</option>
           </select>
         </div>
         <button type="submit" id="demo-submit"
-                class="w-full px-4 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                class="w-full px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-all hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0">
           <span id="demo-submit-text">Extraer ahora</span>
         </button>
       </form>
@@ -96,305 +105,310 @@
       <div id="demo-result" class="mt-6" hidden></div>
     </div>
 
-    <p class="mt-4 text-xs text-slate-500 text-center">
-      Sin login. Limite por IP. Para uso continuo, <a href="/signup" class="text-brand-600 hover:underline">crea una cuenta gratis</a>.
+    <p class="mt-4 text-xs text-slate-500 dark:text-slate-500 text-center">
+      Sin login. Límite por IP. Para uso continuo, <a href="/signup" class="text-brand-600 dark:text-brand-500 hover:underline font-medium">crea una cuenta gratis</a>.
     </p>
   </div>
 </section>
 
-<section class="bg-slate-50 border-y border-slate-200">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-20">
-    <div class="text-center mb-14">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Tres pasos</h2>
-      <p class="mt-3 text-slate-600">Sin SDK, sin configuración. Solo HTTP.</p>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
+  <div class="text-center mb-14 reveal">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Tres pasos</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-400">Sin SDK, sin configuración. Solo HTTP.</p>
+  </div>
+
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="reveal card-lift bg-white dark:bg-slate-900 p-7 rounded-xl border border-slate-200 dark:border-slate-800">
+      <div class="w-10 h-10 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 grid place-items-center font-bold mb-4">1</div>
+      <h3 class="font-semibold text-lg">Crea tu cuenta</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        Email + contraseña. Verificas el correo y recibes tu primera API key
+        al instante.
+      </p>
+    </div>
+    <div class="reveal card-lift bg-white dark:bg-slate-900 p-7 rounded-xl border border-slate-200 dark:border-slate-800" style="transition-delay: 80ms">
+      <div class="w-10 h-10 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 grid place-items-center font-bold mb-4">2</div>
+      <h3 class="font-semibold text-lg">Manda el documento</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        POST con la URL del PDF y el schema (invoice, cv o receipt).
+        Soporta PDFs de hasta 5MB.
+      </p>
+    </div>
+    <div class="reveal card-lift bg-white dark:bg-slate-900 p-7 rounded-xl border border-slate-200 dark:border-slate-800" style="transition-delay: 160ms">
+      <div class="w-10 h-10 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-950 grid place-items-center font-bold mb-4">3</div>
+      <h3 class="font-semibold text-lg">Recibes JSON</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+        Validado con Pydantic. Si la IA inventa un campo o devuelve un tipo
+        raro, falla con 422 antes de llegar a ti.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
+    <div class="text-center mb-14 reveal">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Casos de uso</h2>
+      <p class="mt-3 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        Donde Parsero reemplaza días de trabajo manual o miles de líneas de regex.
+      </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="bg-white p-7 rounded-xl border border-slate-200">
-        <div class="w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold mb-4">1</div>
-        <h3 class="font-semibold text-lg">Crea tu cuenta</h3>
-        <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-          Email + contraseña. Verificas el correo y recibes tu primera API key
-          al instante.
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+        <h3 class="font-semibold text-lg">Empresas de contabilidad</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Digitalizar facturas de proveedores en lugar de tipear vendor, totales
+          e items uno por uno. Tus contadores ven los datos ya estructurados.
         </p>
+        <div class="mt-3 inline-block px-2 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-500 text-xs font-mono rounded">schema_type: invoice</div>
       </div>
-      <div class="bg-white p-7 rounded-xl border border-slate-200">
-        <div class="w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold mb-4">2</div>
-        <h3 class="font-semibold text-lg">Manda el documento</h3>
-        <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-          POST con la URL del PDF y el schema (invoice, cv o receipt).
-          Soporta PDFs de hasta 5MB.
+
+      <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 60ms">
+        <h3 class="font-semibold text-lg">Software de RH (ATS)</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Parsear CVs entrantes y extraer experiencia, educación y skills
+          automáticamente. Tus reclutadores filtran por campos, no por keywords.
         </p>
+        <div class="mt-3 inline-block px-2 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-500 text-xs font-mono rounded">schema_type: cv</div>
       </div>
-      <div class="bg-white p-7 rounded-xl border border-slate-200">
-        <div class="w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold mb-4">3</div>
-        <h3 class="font-semibold text-lg">Recibes JSON</h3>
-        <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-          Validado con Pydantic. Si la IA inventa un campo o devuelve un tipo
-          raro, falla con 422 antes de llegar a ti.
+
+      <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 120ms">
+        <h3 class="font-semibold text-lg">Apps fintech personales</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          El usuario sube fotos de recibos desde su celular. Tu app los categoriza
+          y suma totales sin pedirle que escriba nada.
         </p>
+        <div class="mt-3 inline-block px-2 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-700 dark:text-brand-500 text-xs font-mono rounded">schema_type: receipt</div>
+      </div>
+
+      <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 180ms">
+        <h3 class="font-semibold text-lg">Plataformas legaltech</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Indexar contratos, facturas legales y otros documentos por las partes,
+          montos y fechas. Búsqueda y reporting reales sobre PDFs.
+        </p>
+        <div class="mt-3 inline-block px-2 py-1 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-xs font-mono rounded">contract: en roadmap</div>
       </div>
     </div>
   </div>
 </section>
 
 <section class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
-  <div class="text-center mb-14">
-    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Casos de uso</h2>
-    <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
-      Donde Parsero reemplaza días de trabajo manual o miles de líneas de regex.
+  <div class="text-center mb-14 reveal">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Por qué Parsero</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+      Una API hecha por developers para developers. Sin features de más.
     </p>
   </div>
 
-  <div class="grid md:grid-cols-2 gap-5">
-    <div class="p-6 rounded-xl border border-slate-200 bg-white">
-      <h3 class="font-semibold text-lg">Empresas de contabilidad</h3>
-      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-        Digitalizar facturas de proveedores en lugar de tipear vendor, totales
-        e items uno por uno. Tus contadores ven los datos ya estructurados.
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <polyline points="13 2 13 10 21 10 11 22 11 14 3 14 13 2"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">Rápido</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Menos de 5 segundos por documento. Cache por hash: si pediste el
+        mismo PDF antes, la segunda vez es instantáneo.
       </p>
-      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: invoice</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 bg-white">
-      <h3 class="font-semibold text-lg">Software de RH (ATS)</h3>
-      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-        Parsear CVs entrantes y extraer experiencia, educacion y skills
-        automaticamente. Tus reclutadores filtran por campos, no por keywords.
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 60ms">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">JSON validado</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Schemas Pydantic por cada tipo. Tipos correctos garantizados o
+        respuesta 422.
       </p>
-      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: cv</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 bg-white">
-      <h3 class="font-semibold text-lg">Apps fintech personales</h3>
-      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-        El usuario sube fotos de recibos desde su celular. Tu app los categoriza
-        y suma totales sin pedirle que escriba nada.
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 120ms">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">API keys revocables</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Hasheamos cada key con SHA-256 antes de guardarla. Revoca o rota
+        desde el dashboard cuando quieras.
       </p>
-      <div class="mt-3 inline-block px-2 py-1 bg-brand-50 text-brand-700 text-xs font-mono rounded">schema_type: receipt</div>
     </div>
 
-    <div class="p-6 rounded-xl border border-slate-200 bg-white">
-      <h3 class="font-semibold text-lg">Plataformas legaltech</h3>
-      <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-        Indexar contratos, facturas legales y otros documentos por las partes,
-        montos y fechas. Busqueda y reporting reales sobre PDFs.
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 180ms">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">Tracking de uso</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Cada request queda registrado con tokens consumidos. El dashboard te
+        muestra el consumo del mes en tiempo real.
       </p>
-      <div class="mt-3 inline-block px-2 py-1 bg-slate-100 text-slate-600 text-xs font-mono rounded">contract: en roadmap</div>
+    </div>
+
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 240ms">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">Rate limiting por plan</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        10 req/min en free, 100 en starter, 500 en pro. Bucket por minuto en
+        Redis, sin sorpresas.
+      </p>
+    </div>
+
+    <div class="reveal card-lift p-6 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900" style="transition-delay: 300ms">
+      <div class="w-10 h-10 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-500 grid place-items-center mb-4">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+        </svg>
+      </div>
+      <h3 class="font-semibold">Stack abierto</h3>
+      <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        FastAPI, Postgres, Redis, Gemini. Sin lock-in: cambias el provider
+        de LLM en una clase.
+      </p>
     </div>
   </div>
 </section>
 
-<section class="bg-slate-50 border-y border-slate-200">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-24">
-    <div class="text-center mb-14">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Por que Parsero</h2>
-      <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
-        Una API hecha por developers para developers. Sin features de más.
-      </p>
+<section class="bg-slate-50 dark:bg-slate-900/40 border-y border-slate-200 dark:border-slate-800">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
+    <div class="text-center mb-12 reveal">
+      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Schemas disponibles</h2>
+      <p class="mt-3 text-slate-600 dark:text-slate-400">Tres tipos hoy. Más en camino.</p>
     </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <polyline points="13 2 13 10 21 10 11 22 11 14 3 14 13 2"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">Rápido</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          Menos de 5 segundos por documento. Cache por hash: si pediste el
-          mismo PDF antes, la segunda vez es instantaneo.
-        </p>
+    <div class="grid sm:grid-cols-3 gap-4">
+      <div class="reveal card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 text-center">
+        <div class="text-2xl font-bold font-mono text-brand-600 dark:text-brand-500">invoice</div>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">Vendor, customer, line items, totales, IVA, moneda.</p>
       </div>
-
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">JSON validado</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          Schemas Pydantic por cada tipo. Tipos correctos garantizados o
-          respuesta 422.
-        </p>
+      <div class="reveal card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 text-center" style="transition-delay: 80ms">
+        <div class="text-2xl font-bold font-mono text-brand-600 dark:text-brand-500">cv</div>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">Personal, experience, education, skills, certifications.</p>
       </div>
-
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">API keys revocables</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          Hasheamos cada key con SHA-256 antes de guardarla. Revoca o rota
-          desde el dashboard cuando quieras.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">Tracking de uso</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          Cada request queda registrado con tokens consumidos. El dashboard te
-          muestra el consumo del mes en tiempo real.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">Rate limiting por plan</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          10 req/min en free, 100 en starter, 500 en pro. Bucket por minuto en
-          Redis, sin sorpresas.
-        </p>
-      </div>
-
-      <div class="p-6 rounded-xl border border-slate-200 bg-white hover:border-slate-300 hover:shadow-sm transition-all">
-        <div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 grid place-items-center mb-4">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-          </svg>
-        </div>
-        <h3 class="font-semibold">Stack abierto</h3>
-        <p class="mt-2 text-sm text-slate-600">
-          FastAPI, Postgres, Redis, Gemini. Sin lock-in: cambias el provider
-          de LLM en una clase.
-        </p>
+      <div class="reveal card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 text-center" style="transition-delay: 160ms">
+        <div class="text-2xl font-bold font-mono text-brand-600 dark:text-brand-500">receipt</div>
+        <p class="mt-2 text-xs text-slate-500 dark:text-slate-500">Merchant, items, totales, método de pago, ID transacción.</p>
       </div>
     </div>
   </div>
 </section>
 
 <section class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
-  <div class="text-center mb-12">
-    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Schemas disponibles</h2>
-    <p class="mt-3 text-slate-600">Tres tipos hoy. Más en camino.</p>
+  <div class="text-center mb-10 reveal">
+    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Privacidad y seguridad</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+      Lo que hacemos (y no hacemos) con tus datos.
+    </p>
   </div>
-  <div class="grid sm:grid-cols-3 gap-4">
-    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-      <div class="text-2xl font-bold font-mono text-brand-600">invoice</div>
-      <p class="mt-2 text-xs text-slate-500">Vendor, customer, line items, totales, IVA, moneda.</p>
-    </div>
-    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-      <div class="text-2xl font-bold font-mono text-brand-600">cv</div>
-      <p class="mt-2 text-xs text-slate-500">Personal, experience, education, skills, certifications.</p>
-    </div>
-    <div class="bg-white p-6 rounded-xl border border-slate-200 text-center">
-      <div class="text-2xl font-bold font-mono text-brand-600">receipt</div>
-      <p class="mt-2 text-xs text-slate-500">Merchant, items, totales, método de pago, ID transacción.</p>
-    </div>
-  </div>
-</section>
 
-<section class="bg-slate-50 border-y border-slate-200">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-20">
-    <div class="text-center mb-10">
-      <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Privacidad y seguridad</h2>
-      <p class="mt-3 text-slate-600 max-w-2xl mx-auto">
-        Lo que hacemos (y no hacemos) con tus datos.
+  <div class="space-y-3 reveal">
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group" open>
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿Guardan mis documentos?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        No guardamos el PDF. Solo persistimos el hash SHA-256 (para el cache),
+        el JSON extraído y los tokens consumidos. El binario del documento se
+        procesa en memoria y se descarta.
       </p>
-    </div>
+    </details>
 
-    <div class="space-y-3">
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group" open>
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿Guardan mis documentos?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          No guardamos el PDF. Solo persistimos el hash SHA-256 (para el cache),
-          el JSON extraído y los tokens consumidos. El binario del documento se
-          procesa en memoria y se descarta.
-        </p>
-      </details>
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿Qué LLM usan por debajo?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        Gemini 2.5 Flash de Google. El texto extraído del PDF viaja a la API
+        de Google según
+        <a href="https://ai.google.dev/gemini-api/terms" class="text-brand-600 dark:text-brand-500 hover:underline">su política de privacidad</a>.
+        Si tu caso requiere un proveedor específico (Claude, modelo on-prem),
+        escríbenos.
+      </p>
+    </details>
 
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿Qué LLM usan por debajo?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          Gemini 2.5 Flash de Google. El texto extraído del PDF viaja a la API
-          de Google según
-          <a href="https://ai.google.dev/gemini-api/terms" class="text-brand-600 hover:underline">su política de privacidad</a>.
-          Si tu caso requiere un proveedor específico (Claude, modelo on-prem),
-          escríbenos.
-        </p>
-      </details>
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿Dónde está hosteado?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        Railway en región US-West. Postgres y Redis también están en Railway,
+        en la misma región. Si necesitas data residency en EU o LATAM,
+        escríbenos para coordinar.
+      </p>
+    </details>
 
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿Dónde está hosteado?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          Railway en región US-West. Postgres y Redis también estan en Railway,
-          en la misma región. Si necesitas data residency en EU o LATAM,
-          escríbenos para coordinar.
-        </p>
-      </details>
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿Cómo protegen mis API keys?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        Hasheamos cada key con SHA-256 al crearla. La key en claro se muestra
+        una vez en el dashboard y nunca más. Aunque alguien acceda a la BD,
+        no puede recuperar las keys originales. Puedes revocar y rotar
+        cuando quieras.
+      </p>
+    </details>
 
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿Cómo protegen mis API keys?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          Hasheamos cada key con SHA-256 al crearla. La key en claro se muestra
-          una vez en el dashboard y nunca más. Aunque alguien acceda a la BD,
-          no puede recuperar las keys originales. Puedes revocar y rotar
-          cuando quieras.
-        </p>
-      </details>
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿Son GDPR / SOC2 compliant?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        Por ahora no formalmente, somos v0.1. Si tu caso de uso requiere
+        certificación, escríbenos a hola@parsero.dev y armamos un plan
+        a medida (DPA, región específica, etc.).
+      </p>
+    </details>
 
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿Son GDPR / SOC2 compliant?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          Por ahora no formalmente, somos v0.1. Si tu caso de uso requiere
-          certificación, escríbenos a hola@parsero.dev y armamos un plan
-          a medida (DPA, región específica, etc.).
-        </p>
-      </details>
-
-      <details class="bg-white border border-slate-200 rounded-xl p-5 group">
-        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
-          <span>¿El código es open source?</span>
-          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
-        </summary>
-        <p class="mt-3 text-sm text-slate-600">
-          Si.
-          <a href="https://github.com/RalphPT/parsero" class="text-brand-600 hover:underline">github.com/RalphPT/parsero</a>.
-          Puedes auditar como manejamos auth, rate limiting y persistencia.
-          Si encuentras algo, abre un issue o escríbenos.
-        </p>
-      </details>
-    </div>
+    <details class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span>¿El código es open source?</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400">
+        Sí.
+        <a href="https://github.com/RalphPT/parsero" class="text-brand-600 dark:text-brand-500 hover:underline">github.com/RalphPT/parsero</a>.
+        Puedes auditar cómo manejamos auth, rate limiting y persistencia.
+        Si encuentras algo, abre un issue o escríbenos.
+      </p>
+    </details>
   </div>
 </section>
 
-<section class="max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center">
-  <h2 class="text-3xl sm:text-4xl font-bold tracking-tight">Empieza ahora</h2>
-  <p class="mt-3 text-slate-600">
-    Free tier de 10 req/min. Sin tarjeta. Sin compromiso.
-  </p>
-  <div class="mt-8">
-    <a href="/signup" class="inline-block px-7 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 shadow-sm transition-all">
-      Crear cuenta gratis
-    </a>
+<section class="relative overflow-hidden">
+  <div class="absolute inset-0 bg-slate-950"></div>
+  <div class="absolute inset-0 dot-grid opacity-30"></div>
+  <div class="absolute -top-20 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-brand-500/10 blur-3xl rounded-full"></div>
+
+  <div class="relative max-w-4xl mx-auto px-4 sm:px-6 py-24 text-center text-white">
+    <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Empieza ahora</h2>
+    <p class="mt-4 text-slate-300 text-lg">
+      Free tier de 10 req/min. Sin tarjeta. Sin compromiso.
+    </p>
+    <div class="mt-8">
+      <a href="/signup" class="group inline-flex items-center gap-2 px-7 py-3 bg-white text-slate-950 rounded-lg font-semibold hover:bg-slate-100 shadow-xl shadow-brand-500/20 transition-all hover:-translate-y-px">
+        Crear cuenta gratis
+        <span class="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -433,26 +447,26 @@
 
         if (!r.ok) {
           result.innerHTML = `
-            <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
-              <div class="font-semibold text-red-900 mb-1">Error ${r.status}</div>
-              <div class="text-red-800">${escapeHtml(body.detail || 'Error desconocido')}</div>
+            <div class="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-lg p-4 text-sm">
+              <div class="font-semibold text-red-900 dark:text-red-200 mb-1">Error ${r.status}</div>
+              <div class="text-red-800 dark:text-red-300">${escapeHtml(body.detail || 'Error desconocido')}</div>
             </div>`;
         } else {
           const remaining = body.demos_remaining ?? '?';
           result.innerHTML = `
-            <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-sm text-emerald-900 mb-3">
+            <div class="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/50 rounded-lg px-4 py-3 text-sm text-emerald-900 dark:text-emerald-200 mb-3">
               Extracción exitosa. ${body.input_tokens} tokens in / ${body.output_tokens} out.
               Te quedan <strong>${remaining}</strong> demos hoy.
             </div>
-            <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto text-xs font-mono leading-relaxed max-h-96"><code>${escapeHtml(JSON.stringify(body.data, null, 2))}</code></pre>
+            <pre class="bg-slate-950 text-slate-100 rounded-lg p-4 overflow-x-auto text-xs font-mono leading-relaxed max-h-96 border border-slate-800"><code>${escapeHtml(JSON.stringify(body.data, null, 2))}</code></pre>
           `;
         }
         result.hidden = false;
       } catch (err) {
         result.innerHTML = `
-          <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
-            <div class="font-semibold text-red-900 mb-1">Error de red</div>
-            <div class="text-red-800">${escapeHtml(err.message)}</div>
+          <div class="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900/50 rounded-lg p-4 text-sm">
+            <div class="font-semibold text-red-900 dark:text-red-200 mb-1">Error de red</div>
+            <div class="text-red-800 dark:text-red-300">${escapeHtml(err.message)}</div>
           </div>`;
         result.hidden = false;
       } finally {

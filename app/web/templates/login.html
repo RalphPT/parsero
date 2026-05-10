@@ -5,30 +5,30 @@
 <section class="max-w-md mx-auto px-4 py-16 sm:py-20">
   <div class="text-center mb-8">
     <h1 class="text-3xl font-extrabold tracking-tight">Iniciar sesión</h1>
-    <p class="mt-2 text-sm text-slate-500">Bienvenido de vuelta.</p>
+    <p class="mt-2 text-sm text-slate-500 dark:text-slate-500">Bienvenido de vuelta.</p>
   </div>
 
-  <form method="post" action="/login" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+  <form method="post" action="/login" class="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
     <div>
-      <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email</label>
+      <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Email</label>
       <input type="email" name="email" required value="{{ form_email|default('') }}"
-             class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
+             class="w-full px-3 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
     </div>
     <div>
       <div class="flex justify-between mb-1.5">
-        <label class="block text-sm font-semibold text-slate-700">Contraseña</label>
-        <a href="/forgot-password" class="text-xs text-slate-500 hover:text-slate-900">¿Olvidaste tu contraseña?</a>
+        <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Contraseña</label>
+        <a href="/forgot-password" class="text-xs text-slate-500 dark:text-slate-500 hover:text-slate-900 dark:text-white">¿Olvidaste tu contraseña?</a>
       </div>
       <input type="password" name="password" required
-             class="w-full px-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
+             class="w-full px-3 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-shadow">
     </div>
     <button type="submit" class="w-full px-4 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors">
       Iniciar sesión
     </button>
   </form>
 
-  <p class="mt-6 text-center text-sm text-slate-600">
-    ¿No tienes cuenta? <a href="/signup" class="font-semibold text-slate-900 hover:underline">Crear una</a>
+  <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
+    ¿No tienes cuenta? <a href="/signup" class="font-semibold text-slate-900 dark:text-white hover:underline">Crear una</a>
   </p>
 </section>
 {% endblock %}
