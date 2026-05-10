@@ -14,7 +14,7 @@
       Tu cuenta ya está activa. Te enviamos un email con tu primera API key -
       revísalo y guárdala en un lugar seguro.
     </p>
-    <a href="/login" class="inline-block px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors">
+    <a href="/login" class="inline-block px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
       Iniciar sesión
     </a>
   {% else %}
@@ -27,7 +27,7 @@
     <p class="text-slate-600 dark:text-slate-400 mb-8">
       {{ error_message|default('No pudimos verificar tu email. Solicita un link nuevo desde el login.') }}
     </p>
-    <a href="/login" class="inline-block px-6 py-3 bg-slate-900 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors">
+    <a href="/login" class="inline-block px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
       Volver al login
     </a>
   {% endif %}
