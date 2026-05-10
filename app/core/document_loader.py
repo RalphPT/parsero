@@ -41,7 +41,8 @@ class DocumentLoader:
 
         content_type = response.headers.get("content-type", "").lower()
         url_lower = url.lower()
-        # Detectar PDF por header, extension o magic number (Google Drive y otros
+
+        # Detectar PDF por header, extensión o magic number (Google Drive y otros
         # CDN devuelven octet-stream sin pdf en content-type ni en URL).
         is_pdf = (
             "pdf" in content_type
@@ -50,6 +51,18 @@ class DocumentLoader:
         )
         if is_pdf:
             text = DocumentLoader._extract_pdf_text(content)
+        elif "html" in content_type or content[:15].lstrip().lower().startswith(
+            (b"<!doctype", b"<html")
+        ):
+            # Páginas HTML (preview de Drive, "share" de Dropbox, etc.) no son
+            # documentos. Es el error más común: pegar el link de "view" en lugar
+            # del de "download".
+            raise DocumentLoadError(
+                "La URL devuelve una página HTML, no un archivo. Si es un link "
+                "de Google Drive, cámbialo a formato de descarga directa: "
+                "https://drive.google.com/uc?export=download&id=ID_DEL_ARCHIVO "
+                "(el ID está después de /d/ en la URL original)."
+            )
         elif "text" in content_type or url_lower.endswith((".txt", ".md")):
             text = content.decode("utf-8", errors="ignore")
         else:
