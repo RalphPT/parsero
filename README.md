@@ -58,7 +58,7 @@ curl -X POST http://localhost:8000/api/v1/extract \
   -d '{"document_url": "https://example.com/factura.pdf", "schema_type": "invoice"}'
 ```
 
-Respuesta (cuando termina, ~5 segundos):
+Respuesta (cuando termina, entre 5 y 15 segundos según el tamaño):
 
 ```json
 {
