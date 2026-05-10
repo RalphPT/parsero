@@ -40,9 +40,17 @@ class DocumentLoader:
         content_hash = hashlib.sha256(content).hexdigest()
 
         content_type = response.headers.get("content-type", "").lower()
-        if "pdf" in content_type or url.lower().endswith(".pdf"):
+        url_lower = url.lower()
+        # Detectar PDF por header, extension o magic number (Google Drive y otros
+        # CDN devuelven octet-stream sin pdf en content-type ni en URL).
+        is_pdf = (
+            "pdf" in content_type
+            or url_lower.endswith(".pdf")
+            or content[:4] == b"%PDF"
+        )
+        if is_pdf:
             text = DocumentLoader._extract_pdf_text(content)
-        elif "text" in content_type or url.lower().endswith((".txt", ".md")):
+        elif "text" in content_type or url_lower.endswith((".txt", ".md")):
             text = content.decode("utf-8", errors="ignore")
         else:
             raise DocumentLoadError(
