@@ -67,7 +67,7 @@ async def verify_email(token: str, db: AsyncSession = Depends(get_db)):
     try:
         tenant_id = decode_token(token, expected_purpose="email_verify")
     except pyjwt.ExpiredSignatureError:
-        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Link expirado, pedí uno nuevo")
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, "Link expirado, solicita uno nuevo")
     except pyjwt.PyJWTError:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, "Link inválido")
 
@@ -113,7 +113,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     if not tenant.is_active:
         raise HTTPException(
             status.HTTP_403_FORBIDDEN,
-            "Cuenta sin verificar — revisá tu email",
+            "Cuenta sin verificar, revisa tu email",
         )
 
     return LoginResponse(

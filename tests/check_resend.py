@@ -7,7 +7,7 @@ que la API key funciona y que los templates se ven bien en Gmail.
 Uso:
     .\.venv\Scripts\python.exe -m tests.check_resend perccatrejorafael@gmail.com
 
-NOTA: con el sandbox `onboarding@resend.dev` solo podés mandar al email con
+NOTA: con el sandbox `onboarding@resend.dev` solo puedes mandar al email con
 el que te registraste en Resend. Cuando verifiques tu propio dominio, podrás
 mandar a cualquiera.
 """
@@ -64,7 +64,7 @@ async def main() -> int:
 
     print(f"\n[OK] Los 3 emails fueron aceptados por Resend.")
     print(f"     Revisá tu inbox en {to} (puede demorar 30-60s).")
-    print(f"     Si no llegan, mirá la carpeta de Spam y el dashboard de Resend → Logs.\n")
+    print(f"     Si no llegan, revisa la carpeta de Spam y el dashboard de Resend → Logs.\n")
     return 0
 
 

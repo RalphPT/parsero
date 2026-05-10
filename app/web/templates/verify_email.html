@@ -7,8 +7,8 @@
     <div class="text-6xl mb-4">✓</div>
     <h1 class="text-3xl font-bold mb-4">Email verificado</h1>
     <p class="text-slate-600 mb-8">
-      Tu cuenta ya está activa. Te enviamos un email con tu primera API key —
-      revisalo y guardala en un lugar seguro.
+      Tu cuenta ya está activa. Te enviamos un email con tu primera API key,
+      revísalo y guárdala en un lugar seguro.
     </p>
     <a href="/login" class="inline-block px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800">
       Iniciar sesión
@@ -17,7 +17,7 @@
     <div class="text-6xl mb-4">✕</div>
     <h1 class="text-3xl font-bold mb-4">Link inválido o expirado</h1>
     <p class="text-slate-600 mb-8">
-      {{ error_message|default('No pudimos verificar tu email. Pedí un link nuevo desde el login.') }}
+      {{ error_message|default('No pudimos verificar tu email. Solicita un link nuevo desde el login.') }}
     </p>
     <a href="/login" class="inline-block px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800">
       Volver al login

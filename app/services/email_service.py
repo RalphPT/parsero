@@ -29,21 +29,21 @@ class EmailService:
         subject = "Verifica tu email en Parsero"
         html = f"""
             <h2>Bienvenido a Parsero</h2>
-            <p>Hacé click para verificar tu cuenta:</p>
+            <p>Haz click para verificar tu cuenta:</p>
             <p><a href="{verify_url}">Verificar email</a></p>
-            <p>O copiá este link: {verify_url}</p>
+            <p>O copia este link: {verify_url}</p>
             <p>Este link vence en 24 horas.</p>
         """
         await self._send(to=to, subject=subject, html=html)
 
     async def send_password_reset_email(self, *, to: str, token: str) -> None:
         reset_url = f"{self._base_url}/reset-password?token={token}"
-        subject = "Reseteá tu contraseña en Parsero"
+        subject = "Restablece tu contraseña en Parsero"
         html = f"""
-            <h2>Reset de contraseña</h2>
-            <p>Hacé click para definir una nueva contraseña:</p>
+            <h2>Restablecer contraseña</h2>
+            <p>Haz click para definir una nueva contraseña:</p>
             <p><a href="{reset_url}">Cambiar contraseña</a></p>
-            <p>Si no fuiste vos, ignorá este email.</p>
+            <p>Si no fuiste tú, ignora este email.</p>
             <p>Este link vence en 1 hora.</p>
         """
         await self._send(to=to, subject=subject, html=html)
@@ -54,7 +54,7 @@ class EmailService:
             <h2>Cuenta activada</h2>
             <p>Tu primera API key:</p>
             <pre>{api_key}</pre>
-            <p><strong>Guardala bien</strong>, no se vuelve a mostrar.</p>
+            <p><strong>Guárdala bien</strong>, no se vuelve a mostrar.</p>
         """
         await self._send(to=to, subject=subject, html=html)
 

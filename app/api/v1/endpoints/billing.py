@@ -55,7 +55,7 @@ async def get_portal(tenant: Tenant = Depends(get_current_user_jwt)):
     if not tenant.lemon_subscription_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No tenés suscripción activa para acceder al portal",
+            detail="No tienes suscripción activa para acceder al portal",
         )
     try:
         url = await get_lemonsqueezy_service().get_customer_portal_url(

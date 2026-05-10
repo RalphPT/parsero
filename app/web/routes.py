@@ -162,9 +162,9 @@ async def login_form(
     if request.query_params.get("signed_up"):
         flash = "Te enviamos un email para verificar tu cuenta."
     if request.query_params.get("verified"):
-        flash = "Email verificado. Ya podés iniciar sesión."
+        flash = "Email verificado. Ya puedes iniciar sesión."
     if request.query_params.get("password_reset"):
-        flash = "Contraseña actualizada. Iniciá sesión con la nueva."
+        flash = "Contraseña actualizada. Inicia sesión con la nueva."
     return templates.TemplateResponse(
         request,
         "login.html", {"tenant": None, "flash_success": flash}
@@ -201,7 +201,7 @@ async def login_submit(
             "login.html",
             {
                 "tenant": None,
-                "flash_error": "Cuenta sin verificar — revisá tu email.",
+                "flash_error": "Cuenta sin verificar, revisa tu email.",
                 "form_email": email,
             },
             status_code=status.HTTP_403_FORBIDDEN,
@@ -315,7 +315,7 @@ async def verify_email(
             request,
             "verify_email.html",
             {"tenant": None, "success": False,
-             "error_message": "El link expiró. Iniciá sesión y pedí uno nuevo."},
+             "error_message": "El link expiró. Inicia sesión y solicita uno nuevo."},
             status_code=status.HTTP_400_BAD_REQUEST,
         )
     except pyjwt.PyJWTError:
