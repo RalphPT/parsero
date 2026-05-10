@@ -2,7 +2,7 @@
 Endpoints administrativos. Todos protegidos por X-Admin-Token == SECRET_KEY.
 
 Para v1 los tenants se crean a mano por aquí. Cuando llegue Fase 5 (Stripe +
-landing) se agregará un /auth/signup público — estos seguirán existiendo.
+landing) se agregará un /auth/signup público - estos seguirán existiendo.
 """
 from uuid import UUID
 

@@ -90,13 +90,13 @@ class LemonSqueezyService:
         return resp.json()["data"]
 
     async def get_customer_portal_url(self, subscription_id: str) -> str:
-        """URL hosted del portal — el cliente entra y puede cancelar / cambiar tarjeta."""
+        """URL hosted del portal - el cliente entra y puede cancelar / cambiar tarjeta."""
         sub = await self.get_subscription(subscription_id)
         urls = sub.get("attributes", {}).get("urls", {})
         portal_url = urls.get("customer_portal")
         if not portal_url:
             raise LemonSqueezyError(
-                "Subscription sin customer_portal URL — ¿está cancelada/expirada?"
+                "Subscription sin customer_portal URL - ¿está cancelada/expirada?"
             )
         return portal_url
 

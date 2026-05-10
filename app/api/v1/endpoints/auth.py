@@ -25,7 +25,7 @@ from app.services.email_service import get_email_service
 
 router = APIRouter()
 
-# Mensaje genérico para login fallido — no revelamos si el email existe.
+# Mensaje genérico para login fallido - no revelamos si el email existe.
 _LOGIN_FAIL = "Email o contraseña incorrectos"
 
 
@@ -105,7 +105,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
     repo = TenantRepository(db)
     tenant = await repo.get_by_email(body.email)
 
-    # No revelamos qué falló (email no existe vs password mal) → mismo 401
+    # No revelamos qué falló (email no existe vs password mal) -> mismo 401
     if tenant is None or tenant.password_hash is None:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, _LOGIN_FAIL)
     if not verify_password(body.password, tenant.password_hash):
@@ -129,7 +129,7 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
 async def forgot_password(
     body: ForgotPasswordRequest, db: AsyncSession = Depends(get_db)
 ):
-    """Manda email con reset link. Siempre devuelve 202 — no revela si el email existe."""
+    """Manda email con reset link. Siempre devuelve 202 - no revela si el email existe."""
     tenant = await TenantRepository(db).get_by_email(body.email)
     if tenant is not None and tenant.password_hash is not None:
         token = create_token(tenant_id=tenant.id, purpose="password_reset")

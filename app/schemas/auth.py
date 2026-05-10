@@ -37,7 +37,7 @@ class VerifyEmailResponse(BaseModel):
     si fue creada como parte de la activación."""
     tenant_id: UUID
     email: EmailStr
-    api_key: Optional[str] = None  # raw key — solo se muestra UNA vez
+    api_key: Optional[str] = None  # raw key - solo se muestra UNA vez
 
 
 class ForgotPasswordRequest(BaseModel):

@@ -1,8 +1,8 @@
 """
 Endpoints de billing. Todos requieren JWT de sesión.
 
-  - POST /billing/checkout  → URL hosted de Lemon Squeezy para suscribirse
-  - POST /billing/portal    → URL del portal del cliente (cancelar, cambiar tarjeta)
+  - POST /billing/checkout  -> URL hosted de Lemon Squeezy para suscribirse
+  - POST /billing/portal    -> URL del portal del cliente (cancelar, cambiar tarjeta)
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 
@@ -51,7 +51,7 @@ async def create_checkout(
 
 @router.post("/billing/portal", response_model=PortalResponse)
 async def get_portal(tenant: Tenant = Depends(get_current_user_jwt)):
-    """Devuelve URL del Customer Portal — el cliente cancela o cambia tarjeta ahí."""
+    """Devuelve URL del Customer Portal - el cliente cancela o cambia tarjeta ahí."""
     if not tenant.lemon_subscription_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

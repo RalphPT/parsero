@@ -50,7 +50,7 @@ class GeminiProvider(LLMProvider):
     ) -> str:
         """
         Llama a Gemini con timeout explícito y JSON mode.
-        Cualquier excepción del SDK se traduce a LLMUpstreamError → 502.
+        Cualquier excepción del SDK se traduce a LLMUpstreamError -> 502.
         """
         try:
             model = genai.GenerativeModel(

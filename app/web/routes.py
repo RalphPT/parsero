@@ -29,7 +29,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="app/web/templates")
 
 
-# Cookie config — Secure=False en dev (no HTTPS), True en prod
+# Cookie config - Secure=False en dev (no HTTPS), True en prod
 def _cookie_kwargs() -> dict:
     settings = get_settings()
     is_prod = settings.is_production
@@ -60,13 +60,13 @@ async def _session_or_none(
 
 
 def _redirect(url: str, status_code: int = 303) -> RedirectResponse:
-    """303 See Other — patrón POST/Redirect/GET."""
+    """303 See Other - patrón POST/Redirect/GET."""
     return RedirectResponse(url=url, status_code=status_code)
 
 
-# ──────────────────────────────────────────────────
+#
 # Páginas públicas
-# ──────────────────────────────────────────────────
+#
 @router.get("/", response_class=HTMLResponse)
 async def landing(
     request: Request,
@@ -106,9 +106,9 @@ async def docs_page(
     )
 
 
-# ──────────────────────────────────────────────────
+#
 # Signup
-# ──────────────────────────────────────────────────
+#
 @router.get("/signup", response_class=HTMLResponse)
 async def signup_form(
     request: Request,
@@ -159,9 +159,9 @@ async def signup_submit(
     return _redirect("/login?signed_up=1")
 
 
-# ──────────────────────────────────────────────────
+#
 # Login / Logout
-# ──────────────────────────────────────────────────
+#
 @router.get("/login", response_class=HTMLResponse)
 async def login_form(
     request: Request,
@@ -233,9 +233,9 @@ async def logout():
     return response
 
 
-# ──────────────────────────────────────────────────
+#
 # Forgot / reset password
-# ──────────────────────────────────────────────────
+#
 @router.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_form(request: Request):
     return templates.TemplateResponse(
@@ -254,7 +254,7 @@ async def forgot_submit(
     if tenant is not None and tenant.password_hash is not None:
         token = create_token(tenant_id=tenant.id, purpose="password_reset")
         await get_email_service().send_password_reset_email(to=tenant.email, token=token)
-    # Genérico — no revelamos si el email existe
+    # Genérico - no revelamos si el email existe
     return templates.TemplateResponse(
         request,
         "forgot_password.html",
@@ -312,9 +312,9 @@ async def reset_submit(
     return _redirect("/login?password_reset=1")
 
 
-# ──────────────────────────────────────────────────
+#
 # Verify email (callback del link del email)
-# ──────────────────────────────────────────────────
+#
 @router.get("/verify-email", response_class=HTMLResponse)
 async def verify_email(
     request: Request,
@@ -369,9 +369,9 @@ async def verify_email(
     )
 
 
-# ──────────────────────────────────────────────────
+#
 # Dashboard (autenticado)
-# ──────────────────────────────────────────────────
+#
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(
     request: Request,

@@ -22,7 +22,7 @@ class ApiKeyRepository:
         """
         Crea una API key. Devuelve `(modelo, clave_en_claro)`.
 
-        La clave_en_claro NO se persiste en BD — solo se entrega al cliente
+        La clave_en_claro NO se persiste en BD - solo se entrega al cliente
         UNA VEZ en la respuesta del create. Después solo queda el SHA-256.
         """
         raw_key, key_hash, key_prefix = generate_api_key()

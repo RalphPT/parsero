@@ -50,7 +50,7 @@ def check(ok: bool, label: str) -> None:
 
 
 async def cleanup(test_email: str) -> None:
-    """Borra el tenant — ON DELETE CASCADE limpia jobs/results/usage_logs/api_keys."""
+    """Borra el tenant - ON DELETE CASCADE limpia jobs/results/usage_logs/api_keys."""
     async with AsyncSessionLocal() as db:
         await db.execute(delete(Tenant).where(Tenant.email == test_email))
         await db.commit()
@@ -66,7 +66,7 @@ async def clear_rate_limit(tenant_id: str) -> None:
         await redis_client.delete(k)
 
 
-# ─── LLM mocks para tests 422 / 502 ──────────────────────────
+#  LLM mocks para tests 422 / 502 
 class _UpstreamFailLLM(LLMProvider):
     async def extract(self, *_, **__):
         raise LLMUpstreamError("simulated upstream timeout")
@@ -100,7 +100,7 @@ async def main() -> int:
     async with AsyncClient(transport=transport, base_url="http://test/api/v1") as c:
         print(f"\n>>> Smoke test Fase 3 -- tenant: {test_email}\n")
 
-        # --- Setup ──────────────────────────────────────────
+        # --- Setup 
         r = await c.post(
             "/admin/tenants",
             headers={"X-Admin-Token": ADMIN_TOKEN},
@@ -125,7 +125,7 @@ async def main() -> int:
         raw_key = r.json()["key"]
         auth = {"Authorization": f"Bearer {raw_key}"}
 
-        # --- 1. POST /extract happy path ──────────────────
+        # --- 1. POST /extract happy path 
         test_url = "https://raw.githubusercontent.com/anthropics/anthropic-sdk-python/main/README.md"
         r = await c.post(
             "/extract",
@@ -145,7 +145,7 @@ async def main() -> int:
             f"POST /extract status=completed (got {body['status']})",
         )
 
-        # --- 2. GET /extract/{id} ──────────────────────────
+        # --- 2. GET /extract/{id} 
         r = await c.get(f"/extract/{job_id}", headers=auth)
         check(r.status_code == 200, f"GET /extract/{{id}} -> 200 (got {r.status_code})")
         result = r.json()
@@ -160,7 +160,7 @@ async def main() -> int:
             f"output_tokens > 0 (got {result.get('output_tokens')})",
         )
 
-        # --- 3. Cache hit ───────────────────────────────────
+        # --- 3. Cache hit 
         await clear_rate_limit(tenant_id)
         r = await c.post(
             "/extract",
@@ -173,7 +173,7 @@ async def main() -> int:
             f"Segunda extracción status=cached (got {r.json().get('status')})",
         )
 
-        # --- 4. Schema inválido -> 400 ─────────────────────
+        # --- 4. Schema inválido -> 400 
         await clear_rate_limit(tenant_id)
         r = await c.post(
             "/extract",
@@ -185,7 +185,7 @@ async def main() -> int:
             f"POST /extract schema inválido -> 400 (got {r.status_code})",
         )
 
-        # --- 5. URL inválida -> 400 ────────────────────────
+        # --- 5. URL inválida -> 400 
         await clear_rate_limit(tenant_id)
         r = await c.post(
             "/extract",
@@ -200,7 +200,7 @@ async def main() -> int:
             f"POST /extract URL inválida -> 400 (got {r.status_code})",
         )
 
-        # --- 6. Cross-tenant -> 404 ─────────────────────────
+        # --- 6. Cross-tenant -> 404 
         r = await c.post(
             "/admin/tenants",
             headers={"X-Admin-Token": ADMIN_TOKEN},
@@ -227,7 +227,7 @@ async def main() -> int:
             )
             await cleanup(f"otro-{test_email}")
 
-        # --- 7. LLM upstream falla -> 502 ──────────────────
+        # --- 7. LLM upstream falla -> 502 
         # Override del provider via dependency injection (FastAPI)
         from app.core.llm_provider import get_llm_provider as real_get_llm
         from app.api.v1.endpoints import extraction as ext_module
@@ -273,7 +273,7 @@ async def main() -> int:
         finally:
             ext_module.get_llm_provider = real_get_llm
 
-        # --- 8. LLM devuelve JSON inválido -> 422 ──────────
+        # --- 8. LLM devuelve JSON inválido -> 422 
         await clear_rate_limit(tenant_id)
         ext_module.get_llm_provider = lambda: _BadSchemaLLM()
         try:
@@ -292,11 +292,11 @@ async def main() -> int:
         finally:
             ext_module.get_llm_provider = real_get_llm
 
-        # --- 9. Cleanup ─────────────────────────────────────
+        # --- 9. Cleanup 
         await cleanup(test_email)
         print(f"\n  cleanup: tenant {test_email} borrado")
 
-    # --- Reporte ────────────────────────────────────────
+    # --- Reporte 
     passed = sum(1 for ok, _ in results if ok)
     total = len(results)
     print(f"\n{'-' * 50}")

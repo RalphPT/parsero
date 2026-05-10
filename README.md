@@ -79,20 +79,20 @@ estructura exacta de cada uno están en `app/schemas/extraction_outputs.py`.
 ```
 app/
   api/
-    v1/endpoints/      → admin, auth, billing, extraction, account, tenants
-    webhooks.py        → handler del webhook de Lemon Squeezy
-    dependencies.py    → auth (API key + JWT), rate limit, admin token
-  core/                → config, jwt, passwords, llm provider, prompts, etc.
+    v1/endpoints/      -> admin, auth, billing, extraction, account, tenants
+    webhooks.py        -> handler del webhook de Lemon Squeezy
+    dependencies.py    -> auth (API key + JWT), rate limit, admin token
+  core/                -> config, jwt, passwords, llm provider, prompts, etc.
   db/
-    models/            → tenant, api_key, extraction_job, result, usage_log
-    repositories/      → queries por modelo
-  schemas/             → pydantic in/out
-  services/            → email, lemonsqueezy, redis
+    models/            -> tenant, api_key, extraction_job, result, usage_log
+    repositories/      -> queries por modelo
+  schemas/             -> pydantic in/out
+  services/            -> email, lemonsqueezy, redis
   web/
-    routes.py          → páginas HTML (server-rendered con Jinja2)
-    templates/         → landing, dashboard, login, signup, etc.
-alembic/               → migraciones
-tests/                 → smoke tests por fase (no son pytest, se corren con -m)
+    routes.py          -> páginas HTML (server-rendered con Jinja2)
+    templates/         -> landing, dashboard, login, signup, etc.
+alembic/               -> migraciones
+tests/                 -> smoke tests por fase (no son pytest, se corren con -m)
 ```
 
 ## Tests
@@ -132,7 +132,7 @@ para el browser navegando el dashboard. La dependencia
 distinto = extracción distinta. Sin esto, pedir un mismo PDF como
 `invoice` y luego como `receipt` devolvería el mismo JSON erróneo.
 
-**`completed_at` y status.** Cada job pasa por `pending → processing →
+**`completed_at` y status.** Cada job pasa por `pending -> processing ->
 completed | failed | cached`. Persistir el status incluso en errores
 sirve para auditoría y para no cobrar tokens dos veces si el cliente
 reintenta.

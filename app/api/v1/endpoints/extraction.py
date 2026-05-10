@@ -57,14 +57,14 @@ async def extract_document(
     Extrae datos estructurados de un documento.
 
     El POST espera la respuesta de Gemini y devuelve el status final del job.
-    Para v1 no usamos worker async — Gemini Flash suele responder en <5s.
+    Para v1 no usamos worker async - Gemini Flash suele responder en <5s.
 
     Status codes:
-      - 202 + status=completed       → extracción exitosa
-      - 202 + status=cached          → cache hit (mismo doc + schema antes)
-      - 400                          → documento inválido (URL/tamaño/formato)
-      - 422                          → LLM devolvió JSON que no cumple el schema
-      - 502                          → LLM upstream falló (timeout/red/5xx)
+      - 202 + status=completed       -> extracción exitosa
+      - 202 + status=cached          -> cache hit (mismo doc + schema antes)
+      - 400                          -> documento inválido (URL/tamaño/formato)
+      - 422                          -> LLM devolvió JSON que no cumple el schema
+      - 502                          -> LLM upstream falló (timeout/red/5xx)
     """
     if body.schema_type not in VALID_SCHEMAS:
         raise HTTPException(
@@ -72,7 +72,7 @@ async def extract_document(
             detail=f"schema_type debe ser uno de: {', '.join(sorted(VALID_SCHEMAS))}",
         )
 
-    # Descargar y hashear documento — DocumentLoadError → 400
+    # Descargar y hashear documento - DocumentLoadError -> 400
     try:
         document_text, source_hash = await DocumentLoader.load_and_hash(
             str(body.document_url)
@@ -191,7 +191,7 @@ async def _run_extraction(
             document_text=document_text
         )
 
-        # 1. Llamada al LLM — puede levantar LLMUpstreamError (502)
+        # 1. Llamada al LLM - puede levantar LLMUpstreamError (502)
         llm_response = await llm.extract(
             document_text=document_text,
             schema_type=schema_type,
@@ -200,7 +200,7 @@ async def _run_extraction(
         )
         input_tokens, output_tokens = llm.get_usage_tokens()
 
-        # 2. Parseo + validación Pydantic — fallos = LLMValidationError (422)
+        # 2. Parseo + validación Pydantic - fallos = LLMValidationError (422)
         try:
             raw_data = json.loads(llm_response)
         except json.JSONDecodeError as e:
@@ -212,7 +212,7 @@ async def _run_extraction(
         except ValidationError as e:
             raise LLMValidationError(f"Schema mismatch: {e.errors()}") from e
 
-        # 3. Persistir resultado validado (JSON-mode → dates como string)
+        # 3. Persistir resultado validado (JSON-mode -> dates como string)
         validated_dict = validated.model_dump(mode="json", exclude_none=False)
         await result_repo.create(job_id=job_id, extracted_data=validated_dict)
 

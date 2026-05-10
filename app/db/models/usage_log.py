@@ -31,7 +31,7 @@ class UsageLog(Base):
     output_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     # 6 decimales: el costo unitario de Claude se mide en fracciones de centavo
     cost_usd: Mapped[Decimal] = mapped_column(Numeric(12, 6), nullable=False, default=Decimal("0"))
-    # Periodo de facturación en formato 'YYYY-MM' — agrupa el cobro mensual
+    # Periodo de facturación en formato 'YYYY-MM' - agrupa el cobro mensual
     billing_period: Mapped[str] = mapped_column(String(7), nullable=False, index=True)
 
     created_at: Mapped[datetime] = mapped_column(

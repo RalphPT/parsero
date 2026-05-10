@@ -46,7 +46,7 @@ app.add_middleware(
 
 app.include_router(api_v1_router, prefix="/api/v1")
 app.include_router(webhooks_router, prefix="/webhooks", tags=["webhooks"])
-app.include_router(web_router, include_in_schema=False)  # HTML routes — fuera del OpenAPI
+app.include_router(web_router, include_in_schema=False)  # HTML routes - fuera del OpenAPI
 
 
 @app.get("/health", tags=["system"])

@@ -60,7 +60,7 @@ async def cleanup(test_email: str) -> None:
         await redis_client.delete(k)
 
 
-# ─── tests ──────────────────────────────────────────
+#  tests 
 async def main() -> int:
     test_email = f"smoke-{uuid.uuid4().hex[:8]}@parsero-smoke.com"
     transport = ASGITransport(app=app)
@@ -68,17 +68,17 @@ async def main() -> int:
     async with AsyncClient(transport=transport, base_url="http://test/api/v1") as c:
         print(f"\n>>> Smoke test Fase 2 -- tenant: {test_email}\n")
 
-        # 1. Admin sin token → 401
+        # 1. Admin sin token -> 401
         r = await c.post("/admin/tenants", json={"name": "X", "email": test_email})
-        check(r.status_code == 401, f"POST /admin/tenants sin token → 401 (got {r.status_code})")
+        check(r.status_code == 401, f"POST /admin/tenants sin token -> 401 (got {r.status_code})")
 
-        # 2. Admin con token → 201
+        # 2. Admin con token -> 201
         r = await c.post(
             "/admin/tenants",
             headers={"X-Admin-Token": ADMIN_TOKEN},
             json={"name": "Smoke Test SA", "email": test_email, "plan": "free"},
         )
-        check(r.status_code == 201, f"POST /admin/tenants con token → 201 (got {r.status_code})")
+        check(r.status_code == 201, f"POST /admin/tenants con token -> 201 (got {r.status_code})")
         if r.status_code != 201:
             print(f"    Body: {r.text}")
             await cleanup(test_email)
@@ -87,13 +87,13 @@ async def main() -> int:
         check(r.json()["plan"] == "free", "tenant.plan == 'free'")
         check(r.json()["is_active"] is True, "tenant.is_active == True")
 
-        # 2b. Email duplicado → 409
+        # 2b. Email duplicado -> 409
         r = await c.post(
             "/admin/tenants",
             headers={"X-Admin-Token": ADMIN_TOKEN},
             json={"name": "Dup", "email": test_email},
         )
-        check(r.status_code == 409, f"POST /admin/tenants email duplicado → 409 (got {r.status_code})")
+        check(r.status_code == 409, f"POST /admin/tenants email duplicado -> 409 (got {r.status_code})")
 
         # 3. Crear API key
         r = await c.post(
@@ -101,7 +101,7 @@ async def main() -> int:
             headers={"X-Admin-Token": ADMIN_TOKEN},
             json={"name": "smoke-key"},
         )
-        check(r.status_code == 201, f"POST /admin/tenants/.../keys → 201 (got {r.status_code})")
+        check(r.status_code == 201, f"POST /admin/tenants/.../keys -> 201 (got {r.status_code})")
         if r.status_code != 201:
             print(f"    Body: {r.text}")
             await cleanup(test_email)
@@ -113,23 +113,23 @@ async def main() -> int:
         check(body["key_prefix"] == raw_key[:12], "key_prefix coincide con primeros 12 chars")
         check(body["last_used_at"] is None, "last_used_at empieza en None")
 
-        # 4. /me sin Bearer → 401
+        # 4. /me sin Bearer -> 401
         r = await c.get("/me")
-        check(r.status_code == 401, f"GET /me sin Bearer → 401 (got {r.status_code})")
+        check(r.status_code == 401, f"GET /me sin Bearer -> 401 (got {r.status_code})")
 
-        # 5. /me con Bearer válido → 200
+        # 5. /me con Bearer válido -> 200
         r = await c.get("/me", headers={"Authorization": f"Bearer {raw_key}"})
-        check(r.status_code == 200, f"GET /me con Bearer válido → 200 (got {r.status_code})")
+        check(r.status_code == 200, f"GET /me con Bearer válido -> 200 (got {r.status_code})")
         if r.status_code == 200:
             check(r.json()["email"] == test_email, "GET /me devuelve el tenant correcto")
 
-        # 6. Bearer inválido → 401
+        # 6. Bearer inválido -> 401
         r = await c.get("/me", headers={"Authorization": "Bearer psr_fake_key_xyz"})
-        check(r.status_code == 401, f"GET /me Bearer inválido → 401 (got {r.status_code})")
+        check(r.status_code == 401, f"GET /me Bearer inválido -> 401 (got {r.status_code})")
 
         # 7. /me/keys lista la key
         r = await c.get("/me/keys", headers={"Authorization": f"Bearer {raw_key}"})
-        check(r.status_code == 200, f"GET /me/keys → 200 (got {r.status_code})")
+        check(r.status_code == 200, f"GET /me/keys -> 200 (got {r.status_code})")
         if r.status_code == 200:
             keys = r.json()
             check(len(keys) == 1, f"GET /me/keys devuelve 1 elemento (got {len(keys)})")
@@ -146,8 +146,8 @@ async def main() -> int:
             statuses.append(rr.status_code)
         ok_count = sum(1 for s in statuses if s == 200)
         too_many = sum(1 for s in statuses if s == 429)
-        check(ok_count == 10, f"primeras 10 reqs → 200 (got {ok_count})")
-        check(too_many == 1, f"req #11 → 429 (got {too_many} de 11)")
+        check(ok_count == 10, f"primeras 10 reqs -> 200 (got {ok_count})")
+        check(too_many == 1, f"req #11 -> 429 (got {too_many} de 11)")
 
         # 9. Revocar la key (admin desactiva)
         r = await c.patch(
@@ -157,14 +157,14 @@ async def main() -> int:
         )
         check(
             r.status_code == 200 and r.json()["is_active"] is False,
-            f"PATCH key is_active=false → 200 + is_active=False (got {r.status_code} / {r.json()})",
+            f"PATCH key is_active=false -> 200 + is_active=False (got {r.status_code} / {r.json()})",
         )
 
-        # 10. La key revocada ya no autentica (401, no 429 — debe cortar antes del rate limit)
+        # 10. La key revocada ya no autentica (401, no 429 - debe cortar antes del rate limit)
         r = await c.get("/me", headers={"Authorization": f"Bearer {raw_key}"})
         check(
             r.status_code == 401 and "desactivada" in r.json().get("detail", "").lower(),
-            f"GET /me con key revocada → 401 'desactivada' (got {r.status_code} / {r.json()})",
+            f"GET /me con key revocada -> 401 'desactivada' (got {r.status_code} / {r.json()})",
         )
 
         # 11. Reactivar la key
@@ -175,27 +175,27 @@ async def main() -> int:
         )
         check(
             r.status_code == 200 and r.json()["is_active"] is True,
-            f"PATCH key is_active=true → 200 + is_active=True (got {r.status_code})",
+            f"PATCH key is_active=true -> 200 + is_active=True (got {r.status_code})",
         )
 
         # 12. Limpiar contadores y verificar que la key reactivada vuelve a funcionar
         async for k in redis_client.scan_iter(f"ratelimit:{tenant_id}:*"):
             await redis_client.delete(k)
         r = await c.get("/me", headers={"Authorization": f"Bearer {raw_key}"})
-        check(r.status_code == 200, f"GET /me con key reactivada → 200 (got {r.status_code})")
+        check(r.status_code == 200, f"GET /me con key reactivada -> 200 (got {r.status_code})")
 
-        # 13. Patch sobre key inexistente → 404
+        # 13. Patch sobre key inexistente -> 404
         import uuid as _uuid
         r = await c.patch(
             f"/admin/tenants/{tenant_id}/keys/{_uuid.uuid4()}",
             headers={"X-Admin-Token": ADMIN_TOKEN},
             json={"is_active": False},
         )
-        check(r.status_code == 404, f"PATCH key inexistente → 404 (got {r.status_code})")
+        check(r.status_code == 404, f"PATCH key inexistente -> 404 (got {r.status_code})")
 
-        # 14. GET admin tenants — el de prueba aparece en la lista
+        # 14. GET admin tenants - el de prueba aparece en la lista
         r = await c.get("/admin/tenants", headers={"X-Admin-Token": ADMIN_TOKEN})
-        check(r.status_code == 200, f"GET /admin/tenants → 200 (got {r.status_code})")
+        check(r.status_code == 200, f"GET /admin/tenants -> 200 (got {r.status_code})")
         ids = [t["id"] for t in r.json()]
         check(tenant_id in ids, "tenant de prueba aparece en GET /admin/tenants")
 
@@ -203,19 +203,19 @@ async def main() -> int:
         r = await c.get(f"/admin/tenants/{tenant_id}", headers={"X-Admin-Token": ADMIN_TOKEN})
         check(
             r.status_code == 200 and r.json()["email"] == test_email,
-            f"GET /admin/tenants/{{id}} → 200 con email correcto",
+            f"GET /admin/tenants/{{id}} -> 200 con email correcto",
         )
 
-        # 16. GET admin tenant inexistente → 404
+        # 16. GET admin tenant inexistente -> 404
         r = await c.get(f"/admin/tenants/{_uuid.uuid4()}", headers={"X-Admin-Token": ADMIN_TOKEN})
-        check(r.status_code == 404, f"GET /admin/tenants/{{id}} inexistente → 404 (got {r.status_code})")
+        check(r.status_code == 404, f"GET /admin/tenants/{{id}} inexistente -> 404 (got {r.status_code})")
 
-        # 17. GET admin keys del tenant — incluye la key creada
+        # 17. GET admin keys del tenant - incluye la key creada
         r = await c.get(
             f"/admin/tenants/{tenant_id}/keys",
             headers={"X-Admin-Token": ADMIN_TOKEN},
         )
-        check(r.status_code == 200, f"GET /admin/tenants/{{id}}/keys → 200 (got {r.status_code})")
+        check(r.status_code == 200, f"GET /admin/tenants/{{id}}/keys -> 200 (got {r.status_code})")
         if r.status_code == 200:
             key_ids = [k["id"] for k in r.json()]
             check(api_key_id in key_ids, "key creada aparece en GET /admin/tenants/{id}/keys")

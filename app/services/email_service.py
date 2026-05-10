@@ -75,7 +75,7 @@ class EmailService:
             raise
 
 
-# Singleton — se construye una sola vez y se reusa
+# Singleton - se construye una sola vez y se reusa
 _email_service: Optional[EmailService] = None
 
 

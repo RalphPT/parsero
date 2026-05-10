@@ -114,7 +114,7 @@ async def lemonsqueezy_webhook(
     tenant = await _resolve_tenant(db, payload)
     if tenant is None:
         # Aceptamos el evento (200) para que Lemon Squeezy no reintente
-        # eternamente — pero logueamos para investigar
+        # eternamente - pero logueamos para investigar
         logger.warning(
             "Webhook %s sin tenant resoluble: %s",
             event,
@@ -136,7 +136,7 @@ async def lemonsqueezy_webhook(
         tenant.subscription_renews_at = _parse_renews_at(attrs.get("renews_at"))
 
     elif event in ("subscription_cancelled", "subscription_expired"):
-        # Cliente canceló o expiró — vuelve a free
+        # Cliente canceló o expiró - vuelve a free
         tenant.plan = TenantPlan.free
         tenant.subscription_status = attrs.get("status") or "cancelled"
         tenant.subscription_renews_at = None
@@ -152,7 +152,7 @@ async def lemonsqueezy_webhook(
         tenant.subscription_status = attrs.get("status") or "active"
 
     elif event == "order_created":
-        # Por ahora ignoramos orders — el flujo lo manejamos vía subscription_*
+        # Por ahora ignoramos orders - el flujo lo manejamos vía subscription_*
         return {"status": "ignored", "reason": "order_event"}
 
     else:

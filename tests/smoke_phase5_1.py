@@ -69,7 +69,7 @@ async def cleanup(*emails: str) -> None:
         await redis_client.delete(k)
 
 
-# ─── Email capturer ───────────────────────────────
+#  Email capturer 
 class _CapturingEmailService:
     """Reemplaza al email service real durante el test. Guarda los tokens
     de los links de verificación / reset que normalmente irían por email."""
@@ -106,7 +106,7 @@ async def main() -> int:
     async with AsyncClient(transport=transport, base_url="http://test/api/v1") as c:
         print(f"\n>>> Smoke test Fase 5.1 -- email: {test_email}\n")
 
-        # --- 1. Signup ────────────────────────────────────
+        # --- 1. Signup 
         r = await c.post(
             "/auth/signup",
             json={"name": "Rafael Test", "email": test_email, "password": test_password},
@@ -126,7 +126,7 @@ async def main() -> int:
             "Email de verificación va al destinatario correcto",
         )
 
-        # --- 2. Signup duplicado ──────────────────────────
+        # --- 2. Signup duplicado 
         r = await c.post(
             "/auth/signup",
             json={"name": "Otro", "email": test_email, "password": "x12345678"},
@@ -136,7 +136,7 @@ async def main() -> int:
             f"POST /auth/signup email duplicado -> 409 (got {r.status_code})",
         )
 
-        # --- 3. Login antes de verificar -> 403 ───────────
+        # --- 3. Login antes de verificar -> 403 
         r = await c.post(
             "/auth/login",
             json={"email": test_email, "password": test_password},
@@ -146,7 +146,7 @@ async def main() -> int:
             f"POST /auth/login sin verificar -> 403 (got {r.status_code})",
         )
 
-        # --- 4. Verify-email con token válido ─────────────
+        # --- 4. Verify-email con token válido 
         verify_token = capture.verification_tokens[0][1]
         r = await c.get(f"/auth/verify-email?token={verify_token}")
         check(
@@ -164,21 +164,21 @@ async def main() -> int:
             "Email de bienvenida enviado",
         )
 
-        # --- 5. Verify-email idempotente ──────────────────
+        # --- 5. Verify-email idempotente 
         r = await c.get(f"/auth/verify-email?token={verify_token}")
         check(
             r.status_code == 200 and r.json().get("api_key") is None,
             f"verify-email idempotente -> sin nueva key (got status={r.status_code}, key={r.json().get('api_key')})",
         )
 
-        # --- 6. Verify-email con token chocho ─────────────
+        # --- 6. Verify-email con token chocho 
         r = await c.get("/auth/verify-email?token=not-a-real-jwt")
         check(
             r.status_code == 400,
             f"verify-email token inválido -> 400 (got {r.status_code})",
         )
 
-        # --- 7. Login con password correcta ───────────────
+        # --- 7. Login con password correcta 
         r = await c.post(
             "/auth/login",
             json={"email": test_email, "password": test_password},
@@ -195,7 +195,7 @@ async def main() -> int:
             "Login devuelve email_verified=True",
         )
 
-        # --- 8. Login con password mala ───────────────────
+        # --- 8. Login con password mala 
         r = await c.post(
             "/auth/login",
             json={"email": test_email, "password": "passwordequivocado"},
@@ -205,7 +205,7 @@ async def main() -> int:
             f"POST /auth/login password mal -> 401 (got {r.status_code})",
         )
 
-        # --- 9. GET /account/me con JWT ───────────────────
+        # --- 9. GET /account/me con JWT 
         r = await c.get(
             "/account/me",
             headers={"Authorization": f"Bearer {session_jwt}"},
@@ -224,14 +224,14 @@ async def main() -> int:
                 "GET /account/me incluye email_verified_at",
             )
 
-        # --- 10. /account/me sin JWT ──────────────────────
+        # --- 10. /account/me sin JWT 
         r = await c.get("/account/me")
         check(
             r.status_code == 401,
             f"GET /account/me sin JWT -> 401 (got {r.status_code})",
         )
 
-        # --- 11. /account/me con JWT inválido ────────────
+        # --- 11. /account/me con JWT inválido 
         r = await c.get(
             "/account/me", headers={"Authorization": "Bearer not.a.jwt"}
         )
@@ -240,7 +240,7 @@ async def main() -> int:
             f"GET /account/me JWT inválido -> 401 (got {r.status_code})",
         )
 
-        # --- 12. /account/me con JWT de wrong purpose ────
+        # --- 12. /account/me con JWT de wrong purpose 
         # Usamos el verification token (purpose=email_verify) como si fuera session
         r = await c.get(
             "/account/me",
@@ -251,7 +251,7 @@ async def main() -> int:
             f"GET /account/me con JWT wrong purpose -> 401 (got {r.status_code})",
         )
 
-        # --- 13. forgot-password email inexistente -> 202 ─
+        # --- 13. forgot-password email inexistente -> 202 
         r = await c.post(
             "/auth/forgot-password",
             json={"email": "no-existe-en-bd@parsero-smoke.com"},
@@ -265,7 +265,7 @@ async def main() -> int:
             "No se envió email de reset para cuenta inexistente",
         )
 
-        # --- 14. forgot-password email existente ─────────
+        # --- 14. forgot-password email existente 
         r = await c.post(
             "/auth/forgot-password", json={"email": test_email}
         )
@@ -278,7 +278,7 @@ async def main() -> int:
             "Email de reset enviado",
         )
 
-        # --- 15. reset-password ─────────────────────────
+        # --- 15. reset-password 
         reset_token = capture.reset_tokens[0][1]
         r = await c.post(
             "/auth/reset-password",
@@ -289,7 +289,7 @@ async def main() -> int:
             f"reset-password -> 204 (got {r.status_code})",
         )
 
-        # --- 16. Login con nueva password -> 200 ────────
+        # --- 16. Login con nueva password -> 200 
         r = await c.post(
             "/auth/login",
             json={"email": test_email, "password": new_password},
@@ -299,7 +299,7 @@ async def main() -> int:
             f"Login con nueva password -> 200 (got {r.status_code})",
         )
 
-        # --- 17. Login con password vieja -> 401 ────────
+        # --- 17. Login con password vieja -> 401 
         r = await c.post(
             "/auth/login",
             json={"email": test_email, "password": test_password},
@@ -309,7 +309,7 @@ async def main() -> int:
             f"Login con password vieja -> 401 (got {r.status_code})",
         )
 
-        # --- 18. resend-verification para cuenta verificada → 202 sin email
+        # --- 18. resend-verification para cuenta verificada -> 202 sin email
         capture.verification_tokens.clear()
         r = await c.post(
             "/auth/resend-verification", json={"email": test_email}
@@ -323,7 +323,7 @@ async def main() -> int:
             "No se reenvía email si la cuenta YA está verificada",
         )
 
-        # --- 19. La API key entregada en verify funciona ─
+        # --- 19. La API key entregada en verify funciona 
         async for k in redis_client.scan_iter(f"ratelimit:{tenant_id}:*"):
             await redis_client.delete(k)
         r = await c.get("/me", headers={"Authorization": f"Bearer {first_api_key}"})
@@ -332,7 +332,7 @@ async def main() -> int:
             f"GET /me con la API key creada en verify -> 200 (got {r.status_code})",
         )
 
-        # --- 20. Cleanup ────────────────────────────────
+        # --- 20. Cleanup 
         await cleanup(test_email)
         print(f"\n  cleanup: tenant {test_email} borrado")
 

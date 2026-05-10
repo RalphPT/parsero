@@ -28,7 +28,7 @@ class ApiKeyResponse(BaseModel):
 
 class ApiKeyCreatedResponse(ApiKeyResponse):
     """
-    Respuesta del POST /admin/tenants/{id}/keys. Incluye `key` en claro —
+    Respuesta del POST /admin/tenants/{id}/keys. Incluye `key` en claro -
     solo se devuelve UNA VEZ al crear y nunca se persiste.
     """
     key: str

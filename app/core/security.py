@@ -2,11 +2,11 @@ import hashlib
 import secrets
 
 API_KEY_PREFIX = "psr"
-API_KEY_RAW_BYTES = 32  # secrets.token_urlsafe → ~43 chars base64url
+API_KEY_RAW_BYTES = 32  # secrets.token_urlsafe -> ~43 chars base64url
 
 
 def hash_api_key(key: str) -> str:
-    """SHA-256 hex de la clave en claro. Determinista — el lookup compara hash con hash."""
+    """SHA-256 hex de la clave en claro. Determinista - el lookup compara hash con hash."""
     return hashlib.sha256(key.encode("utf-8")).hexdigest()
 
 

@@ -16,9 +16,9 @@ install:
 
 up:
 	docker compose up -d
-	@echo "⏳ Esperando que PostgreSQL esté listo..."
+	@echo "Esperando que PostgreSQL esté listo..."
 	@sleep 3
-	@echo "✅ Servicios listos"
+	@echo "Servicios listos"
 
 down:
 	docker compose down
@@ -30,7 +30,7 @@ upgrade:
 	alembic upgrade head
 
 reset:
-	@echo "⚠️  Esto borrará toda la BD. Ctrl+C para cancelar..."
+	@echo "Esto borrará toda la BD. Ctrl+C para cancelar..."
 	@sleep 3
 	alembic downgrade base
 	alembic upgrade head

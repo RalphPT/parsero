@@ -1,5 +1,5 @@
 """
-Alembic environment — versión async (SQLAlchemy 2.0 + asyncpg).
+Alembic environment - versión async (SQLAlchemy 2.0 + asyncpg).
 """
 import asyncio
 from logging.config import fileConfig
@@ -15,9 +15,9 @@ from app.db.base import Base
 # Importar el paquete de modelos para que Base.metadata los registre todos
 from app.db import models  # noqa: F401
 
-# ─────────────────────────────────────────────
+#
 # Config
-# ─────────────────────────────────────────────
+#
 config = context.config
 
 if config.config_file_name is not None:
@@ -36,9 +36,9 @@ config.set_main_option("sqlalchemy.url", db_url)
 target_metadata = Base.metadata
 
 
-# ─────────────────────────────────────────────
+#
 # Migraciones offline (genera SQL sin conexión)
-# ─────────────────────────────────────────────
+#
 def run_migrations_offline() -> None:
     url = config.get_main_option("sqlalchemy.url")
     context.configure(
@@ -53,9 +53,9 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 
-# ─────────────────────────────────────────────
+#
 # Migraciones online (con conexión async)
-# ─────────────────────────────────────────────
+#
 def do_run_migrations(connection: Connection) -> None:
     context.configure(
         connection=connection,

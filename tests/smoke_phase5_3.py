@@ -68,7 +68,7 @@ async def cleanup(*emails: str) -> None:
         await redis_client.delete(k)
 
 
-# ─── Email capturer ────────────────────────────────
+#  Email capturer 
 class _Capture:
     is_live = False
     def __init__(self):

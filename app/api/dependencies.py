@@ -25,9 +25,9 @@ settings = get_settings()
 
 LAST_USED_THROTTLE_SECONDS = 60  # Solo escribir last_used_at una vez por minuto
 
-# ──────────────────────────────────────────────────
-# Security schemes (registrados en OpenAPI → botón "Authorize" en Swagger)
-# ──────────────────────────────────────────────────
+#
+# Security schemes (registrados en OpenAPI -> botón "Authorize" en Swagger)
+#
 admin_token_scheme = APIKeyHeader(
     name="X-Admin-Token",
     scheme_name="AdminToken",
@@ -48,9 +48,9 @@ jwt_scheme = HTTPBearer(
 )
 
 
-# ──────────────────────────────────────────────────
+#
 # Admin (header X-Admin-Token)
-# ──────────────────────────────────────────────────
+#
 async def verify_admin(
     x_admin_token: Optional[str] = Depends(admin_token_scheme),
 ) -> None:
@@ -64,9 +64,9 @@ async def verify_admin(
         )
 
 
-# ──────────────────────────────────────────────────
+#
 # Auth de cliente (Bearer <api_key>)
-# ──────────────────────────────────────────────────
+#
 async def get_current_api_key(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db),
@@ -99,7 +99,7 @@ async def get_current_api_key(
     if not api_key.tenant.is_active:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Tenant desactivado")
 
-    # Throttled last_used_at: SET NX EX 60 — solo el primer hit de cada
+    # Throttled last_used_at: SET NX EX 60 - solo el primer hit de cada
     # ventana de 60s escribe a Postgres. Los demás se saltan el write.
     throttle_key = f"apikey:lastused:{api_key.id}"
     just_acquired = await redis.set(
@@ -118,11 +118,11 @@ async def get_current_tenant(
     return api_key.tenant
 
 
-# ──────────────────────────────────────────────────
+#
 # Auth de cliente vía JWT de sesión
 # Usado por endpoints /account/* del dashboard. No comparte path con
 # get_current_api_key para que Swagger pueda diferenciarlos.
-# ──────────────────────────────────────────────────
+#
 SESSION_COOKIE_NAME = "parsero_session"
 
 
@@ -157,9 +157,9 @@ async def get_current_user_jwt(
     return tenant
 
 
-# ──────────────────────────────────────────────────
+#
 # Rate limiter (fixed window por minuto)
-# ──────────────────────────────────────────────────
+#
 async def enforce_rate_limit(
     tenant: Tenant = Depends(get_current_tenant),
     redis=Depends(get_redis),

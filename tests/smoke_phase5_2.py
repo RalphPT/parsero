@@ -71,7 +71,7 @@ async def cleanup(*emails: str) -> None:
         await redis_client.delete(k)
 
 
-# ─── Mocks ────────────────────────────────────────
+#  Mocks 
 class _FakeEmailService:
     is_live = False
     async def send_verification_email(self, **kw): pass
@@ -178,11 +178,11 @@ async def main() -> int:
         jwt = r.json()["access_token"]
         auth = {"Authorization": f"Bearer {jwt}"}
 
-        # --- 1. /billing/checkout sin JWT -> 401 ───────────
+        # --- 1. /billing/checkout sin JWT -> 401 
         r = await c.post("/api/v1/billing/checkout", json={"plan": "starter"})
         check(r.status_code == 401, f"checkout sin JWT -> 401 (got {r.status_code})")
 
-        # --- 2. /billing/checkout con JWT + starter ───────
+        # --- 2. /billing/checkout con JWT + starter 
         r = await c.post(
             "/api/v1/billing/checkout",
             headers=auth,
@@ -195,7 +195,7 @@ async def main() -> int:
                 "checkout devuelve URL válida",
             )
 
-        # --- 3. /billing/checkout con plan inválido ────────
+        # --- 3. /billing/checkout con plan inválido 
         r = await c.post(
             "/api/v1/billing/checkout", headers=auth, json={"plan": "ultra"}
         )
@@ -204,14 +204,14 @@ async def main() -> int:
             f"checkout plan inválido -> 422 (got {r.status_code})",
         )
 
-        # --- 4. /billing/portal sin suscripción -> 400 ────
+        # --- 4. /billing/portal sin suscripción -> 400 
         r = await c.post("/api/v1/billing/portal", headers=auth)
         check(
             r.status_code == 400,
             f"portal sin sub -> 400 (got {r.status_code})",
         )
 
-        # --- 5. webhook sin firma -> 401 ────────────────────
+        # --- 5. webhook sin firma -> 401 
         r = await c.post(
             "/webhooks/lemonsqueezy",
             json={"meta": {"event_name": "test"}, "data": {}},
@@ -221,7 +221,7 @@ async def main() -> int:
             f"webhook sin firma -> 401 (got {r.status_code})",
         )
 
-        # --- 6. webhook con firma mala -> 401 ─────────────
+        # --- 6. webhook con firma mala -> 401 
         r = await c.post(
             "/webhooks/lemonsqueezy",
             content=b'{"x": 1}',
@@ -232,7 +232,7 @@ async def main() -> int:
             f"webhook firma mala -> 401 (got {r.status_code})",
         )
 
-        # --- 7. subscription_created firmado correcto ──────
+        # --- 7. subscription_created firmado correcto 
         sub_id = "sub_test_001"
         cust_id = 99001
         payload = make_subscription_payload(
@@ -270,7 +270,7 @@ async def main() -> int:
             )
             check(t.subscription_status == "active", "subscription_status == active")
 
-        # --- 8. portal después de subscription_created ─────
+        # --- 8. portal después de subscription_created 
         r = await c.post("/api/v1/billing/portal", headers=auth)
         check(r.status_code == 200, f"portal con sub -> 200 (got {r.status_code})")
         if r.status_code == 200:
@@ -279,7 +279,7 @@ async def main() -> int:
                 "portal_url devuelta correctamente",
             )
 
-        # --- 9. subscription_updated a pro ────────────────
+        # --- 9. subscription_updated a pro 
         payload = make_subscription_payload(
             event="subscription_updated",
             tenant_id=tenant_id,
@@ -297,7 +297,7 @@ async def main() -> int:
         t = await get_tenant(tenant_id)
         check(t.plan.value == "pro", f"tenant upgraded a pro (got {t.plan.value})")
 
-        # --- 10. payment_failed -> past_due ────────────────
+        # --- 10. payment_failed -> past_due 
         payload = make_subscription_payload(
             event="subscription_payment_failed",
             tenant_id=tenant_id,
@@ -319,7 +319,7 @@ async def main() -> int:
             f"subscription_status == past_due (got {t.subscription_status})",
         )
 
-        # --- 11. cancelled -> plan vuelve a free ───────────
+        # --- 11. cancelled -> plan vuelve a free 
         payload = make_subscription_payload(
             event="subscription_cancelled",
             tenant_id=tenant_id,
@@ -342,7 +342,7 @@ async def main() -> int:
             "subscription_renews_at se limpió al cancelar",
         )
 
-        # --- 12. evento desconocido -> 200 ignored ─────────
+        # --- 12. evento desconocido -> 200 ignored 
         payload = {
             "meta": {"event_name": "license_key_created", "custom_data": {"tenant_id": tenant_id}},
             "data": {"type": "license_keys", "id": "lk_x", "attributes": {}},
@@ -358,7 +358,7 @@ async def main() -> int:
             f"evento desconocido -> 200 ignored (got {r.status_code} / {r.json()})",
         )
 
-        # --- 13. tenant inexistente -> 200 ignored ─────────
+        # --- 13. tenant inexistente -> 200 ignored 
         bogus = str(uuid.uuid4())
         payload = make_subscription_payload(
             event="subscription_created",
@@ -378,8 +378,8 @@ async def main() -> int:
             f"tenant fantasma -> 200 ignored (got {r.status_code} / {r.json()})",
         )
 
-        # --- 14. Idempotencia: re-postear el mismo evento ──
-        # Re-aplicamos subscription_created → tenant debe quedar en starter de nuevo
+        # --- 14. Idempotencia: re-postear el mismo evento 
+        # Re-aplicamos subscription_created -> tenant debe quedar en starter de nuevo
         payload = make_subscription_payload(
             event="subscription_created",
             tenant_id=tenant_id,
@@ -403,7 +403,7 @@ async def main() -> int:
         t = await get_tenant(tenant_id)
         check(t.plan.value == "starter", f"3x subscription_created -> plan starter (got {t.plan.value})")
 
-        # --- 15. Cleanup ───────────────────────────────────
+        # --- 15. Cleanup 
         await cleanup(test_email)
         print(f"\n  cleanup: tenant {test_email} borrado")
 

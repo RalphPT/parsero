@@ -22,9 +22,9 @@ class ApiKey(Base):
         UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"),
         nullable=False, index=True,
     )
-    # SHA-256 de la clave en claro — nunca guardamos la clave real
+    # SHA-256 de la clave en claro - nunca guardamos la clave real
     key_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
-    # Prefijo público de la key (ej: "psr_abc123…") para que el usuario reconozca cuál es cuál
+    # Prefijo público de la key (ej: "psr_abc123...") para que el usuario reconozca cuál es cuál
     key_prefix: Mapped[str] = mapped_column(String(16), nullable=False)
     name: Mapped[Optional[str]] = mapped_column(String(80))
 
@@ -40,4 +40,4 @@ class ApiKey(Base):
     extraction_jobs: Mapped[list["ExtractionJob"]] = relationship(back_populates="api_key")
 
     def __repr__(self) -> str:
-        return f"<ApiKey {self.id} {self.key_prefix}… active={self.is_active}>"
+        return f"<ApiKey {self.id} {self.key_prefix}... active={self.is_active}>"
