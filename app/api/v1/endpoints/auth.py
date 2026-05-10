@@ -1,7 +1,11 @@
 """Auth pública: signup, verify, login, forgot/reset password."""
+import logging
+
 import jwt as pyjwt
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+
+logger = logging.getLogger(__name__)
 
 from app.api.dependencies import get_current_user_jwt
 from app.core.jwt_tokens import create_token, decode_token
@@ -56,7 +60,12 @@ async def signup(
     await db.commit()
 
     token = create_token(tenant_id=tenant.id, purpose="email_verify")
-    await get_email_service().send_verification_email(to=body.email, token=token)
+    try:
+        await get_email_service().send_verification_email(to=body.email, token=token)
+    except Exception as e:
+        # Resend puede rechazar (sandbox solo permite tu propio email).
+        # No rompemos el signup, pero logueamos para investigar.
+        logger.error("send_verification_email falló para %s: %s", body.email, e)
 
     return SignupResponse(tenant_id=tenant.id, email=body.email)
 
@@ -133,9 +142,12 @@ async def forgot_password(
     tenant = await TenantRepository(db).get_by_email(body.email)
     if tenant is not None and tenant.password_hash is not None:
         token = create_token(tenant_id=tenant.id, purpose="password_reset")
-        await get_email_service().send_password_reset_email(
-            to=tenant.email, token=token
-        )
+        try:
+            await get_email_service().send_password_reset_email(
+                to=tenant.email, token=token
+            )
+        except Exception as e:
+            logger.error("send_password_reset_email falló para %s: %s", body.email, e)
     return {"message": "Si la cuenta existe, te enviamos un email con instrucciones"}
 
 
@@ -168,9 +180,12 @@ async def resend_verification(
     tenant = await TenantRepository(db).get_by_email(body.email)
     if tenant is not None and tenant.email_verified_at is None:
         token = create_token(tenant_id=tenant.id, purpose="email_verify")
-        await get_email_service().send_verification_email(
-            to=tenant.email, token=token
-        )
+        try:
+            await get_email_service().send_verification_email(
+                to=tenant.email, token=token
+            )
+        except Exception as e:
+            logger.error("resend_verification falló para %s: %s", body.email, e)
     return {"message": "Si la cuenta existe y no está verificada, te enviamos un email"}
 
 

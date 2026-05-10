@@ -154,7 +154,15 @@ async def signup_submit(
     await db.commit()
 
     token = create_token(tenant_id=tenant.id, purpose="email_verify")
-    await get_email_service().send_verification_email(to=email, token=token)
+    try:
+        await get_email_service().send_verification_email(to=email, token=token)
+    except Exception as e:
+        # Resend en sandbox solo permite mandar al email registrado.
+        # Logueamos pero no rompemos el signup.
+        import logging
+        logging.getLogger(__name__).error(
+            "send_verification_email falló para %s: %s", email, e
+        )
 
     return _redirect("/login?signed_up=1")
 
@@ -253,7 +261,13 @@ async def forgot_submit(
     tenant = await TenantRepository(db).get_by_email(email)
     if tenant is not None and tenant.password_hash is not None:
         token = create_token(tenant_id=tenant.id, purpose="password_reset")
-        await get_email_service().send_password_reset_email(to=tenant.email, token=token)
+        try:
+            await get_email_service().send_password_reset_email(to=tenant.email, token=token)
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).error(
+                "send_password_reset_email falló para %s: %s", email, e
+            )
     # Genérico - no revelamos si el email existe
     return templates.TemplateResponse(
         request,
