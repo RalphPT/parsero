@@ -47,7 +47,7 @@
       </a>
       <nav class="flex items-center gap-1 sm:gap-2 text-sm font-medium">
         <a href="/pricing" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Precios</a>
-        <a href="/docs" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors hidden sm:inline-block">API</a>
+        <a href="/docs" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors hidden sm:inline-block">Docs</a>
         {% if tenant %}
           <a href="/dashboard" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Dashboard</a>
           <form method="post" action="/logout" class="inline">
@@ -104,14 +104,15 @@
           <h4 class="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3">Producto</h4>
           <ul class="space-y-2 text-sm">
             <li><a href="/pricing" class="text-slate-600 hover:text-slate-900">Precios</a></li>
-            <li><a href="/docs" class="text-slate-600 hover:text-slate-900">Documentación API</a></li>
+            <li><a href="/docs" class="text-slate-600 hover:text-slate-900">Documentación</a></li>
             <li><a href="/signup" class="text-slate-600 hover:text-slate-900">Crear cuenta</a></li>
           </ul>
         </div>
         <div>
           <h4 class="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3">Recursos</h4>
           <ul class="space-y-2 text-sm">
-            <li><a href="/docs" class="text-slate-600 hover:text-slate-900">Swagger</a></li>
+            <li><a href="/swagger" class="text-slate-600 hover:text-slate-900">Swagger UI</a></li>
+            <li><a href="/redoc" class="text-slate-600 hover:text-slate-900">ReDoc</a></li>
             <li><a href="https://github.com/RalphPT/parsero" class="text-slate-600 hover:text-slate-900">GitHub</a></li>
           </ul>
         </div>

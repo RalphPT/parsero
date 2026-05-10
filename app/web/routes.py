@@ -93,6 +93,19 @@ async def pricing(
     )
 
 
+@router.get("/docs", response_class=HTMLResponse)
+async def docs_page(
+    request: Request,
+    parsero_session: Optional[str] = Cookie(default=None, alias=SESSION_COOKIE_NAME),
+    db: AsyncSession = Depends(get_db),
+):
+    tenant = await _session_or_none(parsero_session, db)
+    return templates.TemplateResponse(
+        request,
+        "docs.html", {"tenant": tenant}
+    )
+
+
 # ──────────────────────────────────────────────────
 # Signup
 # ──────────────────────────────────────────────────

@@ -23,7 +23,7 @@ app = FastAPI(
     version=settings.app_version,
     debug=settings.app_debug,
     lifespan=lifespan,
-    docs_url="/docs",
+    docs_url="/swagger",
     redoc_url="/redoc",
     description=(
         "API SaaS para extraer datos estructurados de documentos (facturas, "

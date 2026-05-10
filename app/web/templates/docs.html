@@ -1,0 +1,349 @@
+{% extends "base.html" %}
+{% block title %}Documentación — Parsero{% endblock %}
+
+{% block content %}
+<section class="bg-gradient-to-b from-slate-50 to-white border-b border-slate-200">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-20 text-center">
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
+      Documentación
+    </h1>
+    <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
+      Tu primera request en menos de un minuto. Para detalles completos de
+      cada endpoint, mira la <a href="/swagger" class="text-brand-600 hover:text-brand-700 font-semibold">reference en Swagger</a>.
+    </p>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+  <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Empieza en 60 segundos</h2>
+  <p class="text-slate-600 mb-10">Tres pasos para tu primera extracción.</p>
+
+  <div class="space-y-10">
+
+    <div class="flex gap-5">
+      <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold">1</div>
+      <div class="flex-1 pt-1">
+        <h3 class="text-lg font-semibold mb-1">Crea una cuenta gratis</h3>
+        <p class="text-slate-600 text-sm">
+          Solo necesitas un email. Verifica tu correo y obtienes tu primera
+          API key automáticamente.
+        </p>
+        <a href="/signup" class="inline-block mt-3 px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors">
+          Crear cuenta
+        </a>
+      </div>
+    </div>
+
+    <div class="flex gap-5">
+      <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold">2</div>
+      <div class="flex-1 pt-1">
+        <h3 class="text-lg font-semibold mb-1">Copia tu API key</h3>
+        <p class="text-slate-600 text-sm">
+          La API key te aparece al verificar el email y en el dashboard al crear
+          una nueva. Empieza con <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">psr_</code> y se muestra una sola vez,
+          guárdala en un lugar seguro.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex gap-5">
+      <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold">3</div>
+      <div class="flex-1 pt-1">
+        <h3 class="text-lg font-semibold mb-1">Manda tu primera request</h3>
+        <p class="text-slate-600 text-sm mb-4">
+          POST a <code class="font-mono text-xs bg-slate-100 px-1.5 py-0.5 rounded">/api/v1/extract</code> con la URL del documento y el schema.
+          Elige tu lenguaje:
+        </p>
+
+        <div class="rounded-xl bg-slate-900 overflow-hidden shadow-lg" data-tabs>
+          <div class="flex items-center gap-1 px-2 py-2 border-b border-slate-700/50" data-tab-bar>
+            <button type="button" class="tab-btn active px-3 py-1.5 text-xs font-mono text-slate-300 rounded hover:bg-slate-800 transition-colors" data-lang="curl">curl</button>
+            <button type="button" class="tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 rounded hover:bg-slate-800 transition-colors" data-lang="python">Python</button>
+            <button type="button" class="tab-btn px-3 py-1.5 text-xs font-mono text-slate-400 rounded hover:bg-slate-800 transition-colors" data-lang="javascript">JavaScript</button>
+          </div>
+
+<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="curl"><code><span class="text-emerald-400">curl</span> -X POST https://parsero-production.up.railway.app/api/v1/extract \
+  -H <span class="text-amber-300">"Authorization: Bearer psr_xxx"</span> \
+  -H <span class="text-amber-300">"Content-Type: application/json"</span> \
+  -d <span class="text-amber-300">'{
+    "document_url": "https://example.com/factura.pdf",
+    "schema_type": "invoice"
+  }'</span></code></pre>
+
+<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="python" hidden><code><span class="text-violet-300">import</span> httpx
+
+response = httpx.post(
+    <span class="text-amber-300">"https://parsero-production.up.railway.app/api/v1/extract"</span>,
+    headers={<span class="text-amber-300">"Authorization"</span>: <span class="text-amber-300">"Bearer psr_xxx"</span>},
+    json={
+        <span class="text-amber-300">"document_url"</span>: <span class="text-amber-300">"https://example.com/factura.pdf"</span>,
+        <span class="text-amber-300">"schema_type"</span>: <span class="text-amber-300">"invoice"</span>,
+    },
+    timeout=<span class="text-violet-300">30</span>,
+)
+<span class="text-violet-300">print</span>(response.json())</code></pre>
+
+<pre class="p-5 text-sm font-mono leading-relaxed overflow-x-auto" data-lang="javascript" hidden><code><span class="text-violet-300">const</span> response = <span class="text-violet-300">await</span> fetch(
+  <span class="text-amber-300">"https://parsero-production.up.railway.app/api/v1/extract"</span>,
+  {
+    method: <span class="text-amber-300">"POST"</span>,
+    headers: {
+      <span class="text-amber-300">"Authorization"</span>: <span class="text-amber-300">"Bearer psr_xxx"</span>,
+      <span class="text-amber-300">"Content-Type"</span>: <span class="text-amber-300">"application/json"</span>,
+    },
+    body: JSON.stringify({
+      document_url: <span class="text-amber-300">"https://example.com/factura.pdf"</span>,
+      schema_type: <span class="text-amber-300">"invoice"</span>,
+    }),
+  }
+);
+<span class="text-violet-300">const</span> data = <span class="text-violet-300">await</span> response.json();
+console.log(data);</code></pre>
+
+        </div>
+
+        <p class="text-xs text-slate-500 mt-3">
+          Reemplaza <code class="font-mono">psr_xxx</code> con tu API key real.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-50 border-y border-slate-200">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">La respuesta</h2>
+    <p class="text-slate-600 mb-6">
+      <code class="font-mono text-sm bg-white px-2 py-1 rounded border border-slate-200">POST /extract</code>
+      devuelve <code class="font-mono text-sm bg-white px-2 py-1 rounded border border-slate-200">202</code>
+      con el ID del job y el status final:
+    </p>
+
+    <pre class="rounded-xl bg-slate-900 text-slate-200 p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code>{
+  <span class="text-sky-300">"id"</span>: <span class="text-amber-300">"69fc429b-8343-4f83-859f-e1e9d4b35f67"</span>,
+  <span class="text-sky-300">"status"</span>: <span class="text-amber-300">"completed"</span>,
+  <span class="text-sky-300">"created_at"</span>: <span class="text-amber-300">"2026-05-09T..."</span>
+}</code></pre>
+
+    <p class="text-slate-600 mt-6 mb-2">
+      Para traer la data extraída, haz <code class="font-mono text-sm bg-white px-2 py-1 rounded border border-slate-200">GET /api/v1/extract/{id}</code> con la misma API key:
+    </p>
+
+    <pre class="rounded-xl bg-slate-900 text-slate-200 p-5 text-sm font-mono leading-relaxed overflow-x-auto"><code>{
+  <span class="text-sky-300">"job_id"</span>: <span class="text-amber-300">"69fc429b-..."</span>,
+  <span class="text-sky-300">"status"</span>: <span class="text-amber-300">"completed"</span>,
+  <span class="text-sky-300">"data"</span>: {
+    <span class="text-sky-300">"invoice_number"</span>: <span class="text-amber-300">"INV-2026-001"</span>,
+    <span class="text-sky-300">"vendor"</span>: { <span class="text-sky-300">"name"</span>: <span class="text-amber-300">"Acme Corp"</span>, <span class="text-sky-300">"tax_id"</span>: <span class="text-amber-300">"20-123-4567"</span> },
+    <span class="text-sky-300">"line_items"</span>: [...],
+    <span class="text-sky-300">"total"</span>: <span class="text-violet-300">1234.56</span>,
+    <span class="text-sky-300">"currency"</span>: <span class="text-amber-300">"USD"</span>
+  },
+  <span class="text-sky-300">"input_tokens"</span>: <span class="text-violet-300">1240</span>,
+  <span class="text-sky-300">"output_tokens"</span>: <span class="text-violet-300">180</span>
+}</code></pre>
+
+    <div class="mt-6 grid sm:grid-cols-3 gap-3 text-xs">
+      <div class="bg-white border border-slate-200 rounded-lg p-3">
+        <code class="font-mono text-slate-700">status: completed</code>
+        <p class="text-slate-500 mt-1">Extracción exitosa.</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-3">
+        <code class="font-mono text-slate-700">status: cached</code>
+        <p class="text-slate-500 mt-1">Mismo documento + schema ya procesado antes. No consume tokens nuevos.</p>
+      </div>
+      <div class="bg-white border border-slate-200 rounded-lg p-3">
+        <code class="font-mono text-slate-700">status: failed</code>
+        <p class="text-slate-500 mt-1">Mira <code class="font-mono">error_message</code> para el detalle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+  <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Schemas disponibles</h2>
+  <p class="text-slate-600 mb-8">
+    El campo <code class="font-mono text-sm bg-slate-100 px-1.5 py-0.5 rounded">schema_type</code> determina la estructura del JSON.
+    Los modelos completos están en
+    <a href="https://github.com/RalphPT/parsero/blob/main/app/schemas/extraction_outputs.py" class="text-brand-600 hover:text-brand-700 underline">
+      app/schemas/extraction_outputs.py
+    </a>.
+  </p>
+
+  <div class="space-y-4">
+    <details class="bg-white border border-slate-200 rounded-xl p-5 group" open>
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span><code class="font-mono text-brand-600 mr-2">invoice</code> Facturas y notas de venta</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <div class="mt-4 text-sm text-slate-600">
+        <p class="mb-2">Campos principales:</p>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
+          <li>invoice_number, issue_date, due_date</li>
+          <li>vendor (name, email, tax_id, address)</li>
+          <li>customer (name, email, tax_id, address)</li>
+          <li>line_items[] (description, quantity, unit_price, total)</li>
+          <li>subtotal, tax, total, currency</li>
+          <li>payment_terms</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span><code class="font-mono text-brand-600 mr-2">cv</code> Currículums y resumes</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <div class="mt-4 text-sm text-slate-600">
+        <p class="mb-2">Campos principales:</p>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
+          <li>personal (full_name, email, phone, location)</li>
+          <li>experience[] (company, job_title, dates, achievements)</li>
+          <li>education[] (institution, degree, field, dates)</li>
+          <li>skills[]</li>
+          <li>certifications[] (name, issuer, date)</li>
+          <li>languages[] (language, proficiency)</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="bg-white border border-slate-200 rounded-xl p-5 group">
+      <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+        <span><code class="font-mono text-brand-600 mr-2">receipt</code> Recibos y tickets de compra</span>
+        <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+      </summary>
+      <div class="mt-4 text-sm text-slate-600">
+        <p class="mb-2">Campos principales:</p>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-1 font-mono text-xs">
+          <li>merchant (name, address, tax_id)</li>
+          <li>transaction_date, transaction_time</li>
+          <li>line_items[] (description, quantity, unit_price)</li>
+          <li>subtotal, tax, total, currency</li>
+          <li>payment_method, transaction_id</li>
+          <li>loyalty_program</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="bg-slate-50 border-y border-slate-200">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Manejo de errores</h2>
+    <p class="text-slate-600 mb-8">
+      Todos los errores devuelven un JSON con el campo <code class="font-mono text-sm bg-white px-2 py-1 rounded border border-slate-200">detail</code> describiendo el problema.
+    </p>
+
+    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-slate-100/70 text-slate-700">
+          <tr>
+            <th class="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider">Código</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider">Significado</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider">Qué hacer</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          <tr>
+            <td class="px-5 py-3 font-mono font-semibold text-slate-900">400</td>
+            <td class="px-5 py-3 text-slate-700">Documento inválido o no descargable.</td>
+            <td class="px-5 py-3 text-slate-500">Verifica la URL, el tamaño (max 5MB) y el formato (PDF/text).</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-mono font-semibold text-slate-900">401</td>
+            <td class="px-5 py-3 text-slate-700">API key faltante, inválida o revocada.</td>
+            <td class="px-5 py-3 text-slate-500">Genera una nueva key desde el dashboard.</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-mono font-semibold text-slate-900">422</td>
+            <td class="px-5 py-3 text-slate-700">El LLM devolvió JSON que no cumple el schema.</td>
+            <td class="px-5 py-3 text-slate-500">Reintenta. Si persiste, el documento puede no ser del tipo indicado.</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-mono font-semibold text-slate-900">429</td>
+            <td class="px-5 py-3 text-slate-700">Rate limit excedido para tu plan.</td>
+            <td class="px-5 py-3 text-slate-500">Espera lo indicado en <code class="font-mono text-xs">Retry-After</code> o actualiza de plan.</td>
+          </tr>
+          <tr>
+            <td class="px-5 py-3 font-mono font-semibold text-slate-900">502</td>
+            <td class="px-5 py-3 text-slate-700">Error del proveedor LLM (timeout, red).</td>
+            <td class="px-5 py-3 text-slate-500">Reintenta con backoff. Es transitorio.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 sm:px-6 py-16">
+  <h2 class="text-2xl sm:text-3xl font-bold tracking-tight mb-2">Conceptos clave</h2>
+  <p class="text-slate-600 mb-8">Tres cosas que vale la pena saber.</p>
+
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="font-semibold mb-2">Cache automático</h3>
+      <p class="text-sm text-slate-600">
+        El cache key es <code class="font-mono text-xs">(tu_tenant, hash_del_documento, schema_type)</code>.
+        Si pides el mismo documento con el mismo schema dos veces,
+        la segunda viene del cache y no consume tokens nuevos.
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="font-semibold mb-2">Rate limiting</h3>
+      <p class="text-sm text-slate-600">
+        Bucket por minuto en Redis. Cuando excedes el límite del plan,
+        recibes <code class="font-mono text-xs">429</code> con header
+        <code class="font-mono text-xs">Retry-After: 60</code>. Sin overage charges.
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="font-semibold mb-2">Seguridad de las keys</h3>
+      <p class="text-sm text-slate-600">
+        Solo guardamos el hash SHA-256 de cada key. La key en claro se
+        muestra una vez al crearla y nunca más. Si la pierdes,
+        revócala y genera una nueva.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-slate-900 text-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-16 text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Reference completa de la API</h2>
+    <p class="mt-3 text-slate-300 max-w-2xl mx-auto">
+      Todos los endpoints, parámetros y schemas en formato OpenAPI.
+      Puedes probar las requests directo desde Swagger.
+    </p>
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="/swagger" class="inline-block px-6 py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition-colors">
+        Abrir Swagger UI
+      </a>
+      <a href="/redoc" class="inline-block px-6 py-3 border border-slate-600 text-white rounded-lg font-semibold hover:bg-slate-800 transition-colors">
+        Ver en ReDoc
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-tabs]').forEach(group => {
+    const bar = group.querySelector('[data-tab-bar]');
+    bar.addEventListener('click', e => {
+      const btn = e.target.closest('.tab-btn');
+      if (!btn) return;
+      const lang = btn.dataset.lang;
+      bar.querySelectorAll('.tab-btn').forEach(b => {
+        const isActive = b === btn;
+        b.classList.toggle('active', isActive);
+        b.classList.toggle('text-slate-300', isActive);
+        b.classList.toggle('text-slate-400', !isActive);
+        b.classList.toggle('bg-slate-800', isActive);
+      });
+      group.querySelectorAll('pre[data-lang]').forEach(p => {
+        p.hidden = p.dataset.lang !== lang;
+      });
+    });
+  });
+</script>
+
+{% endblock %}
