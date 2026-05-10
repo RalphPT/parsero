@@ -11,7 +11,7 @@
     </div>
     <div class="flex items-center gap-3">
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-medium">
-        <span class="w-1.5 h-1.5 rounded-full {% if tenant.subscription_status == 'active' %}bg-emerald-500{% elif tenant.subscription_status == 'past_due' %}bg-amber-500{% else %}bg-slate-400{% endif %}"></span>
+        <span class="w-1.5 h-1.5 rounded-full {% if tenant.subscription_status == 'active' %}bg-emerald-500{% elif 'past_due' %}bg-amber-500{% else %}bg-slate-400{% endif %}"></span>
         Plan {{ tenant.plan.value|capitalize }}
       </div>
     </div>
@@ -44,30 +44,30 @@
 
   <div class="grid md:grid-cols-3 gap-4 mb-8">
 
-    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+    <div class="card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
         <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Uso del mes</span>
         <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
         </svg>
       </div>
-      <div class="text-3xl font-extrabold tracking-tight">{{ usage.extractions_count }}</div>
-      <div class="text-sm text-slate-500 dark:text-slate-500">extracciónes en {{ usage.billing_period }}</div>
+      <div class="text-4xl font-extrabold tracking-tight tabular-nums">{{ usage.extractions_count }}</div>
+      <div class="text-sm text-slate-500 dark:text-slate-500 mt-1">extracciones en {{ usage.billing_period }}</div>
       <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs text-slate-500 dark:text-slate-500">
         <span>{{ usage.input_tokens }} tokens in</span>
         <span>{{ usage.output_tokens }} tokens out</span>
       </div>
     </div>
 
-    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+    <div class="card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
         <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Plan actual</span>
         <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
         </svg>
       </div>
-      <div class="text-3xl font-extrabold tracking-tight">{{ tenant.plan.value|capitalize }}</div>
-      <div class="text-sm text-slate-500 dark:text-slate-500">{{ rate_limit }} requests/minuto</div>
+      <div class="text-4xl font-extrabold tracking-tight">{{ tenant.plan.value|capitalize }}</div>
+      <div class="text-sm text-slate-500 dark:text-slate-500 mt-1">{{ rate_limit }} requests/minuto</div>
       {% if tenant.subscription_renews_at %}
       <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-500">
         Renueva el {{ tenant.subscription_renews_at.strftime('%d/%m/%Y') }}
@@ -75,7 +75,7 @@
       {% endif %}
     </div>
 
-    <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+    <div class="card-lift bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
       <div class="flex items-center justify-between mb-3">
         <span class="text-xs uppercase font-semibold text-slate-500 dark:text-slate-500 tracking-wider">Suscripción</span>
         <svg class="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -84,16 +84,16 @@
       </div>
       {% if tenant.lemon_subscription_id %}
         <form method="post" action="/dashboard/portal" class="mt-1">
-          <button type="submit" class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:bg-slate-900/40 text-sm font-semibold transition-colors">
+          <button type="submit" class="w-full px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-semibold transition-colors">
             Gestionar suscripción
           </button>
         </form>
       {% else %}
         <form method="post" action="/dashboard/upgrade" class="space-y-2 mt-1">
-          <button type="submit" name="plan" value="starter" class="w-full px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 text-sm font-semibold transition-colors">
-            Actualizar a Starter - $19
+          <button type="submit" name="plan" value="starter" class="w-full px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg hover:bg-slate-800 dark:hover:bg-slate-200 text-sm font-semibold transition-colors">
+            Actualizar a Starter — $19
           </button>
-          <button type="submit" name="plan" value="pro" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:bg-slate-900/40 text-sm font-semibold transition-colors">
+          <button type="submit" name="plan" value="pro" class="w-full px-4 py-2 border border-slate-300 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm font-semibold transition-colors">
             Actualizar a Pro - $79
           </button>
         </form>
@@ -102,7 +102,7 @@
   </div>
 
   {% if not keys or (keys|length == 1 and usage.extractions_count == 0) %}
-  <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-8 mb-8">
+  <div class="bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 text-white rounded-2xl p-8 mb-8">
     <h2 class="text-xl font-bold mb-2">Tu primer request</h2>
     <p class="text-slate-300 text-sm mb-5">
       Copia este snippet y reemplaza la API key con la tuya:
@@ -127,9 +127,9 @@
         <p class="text-xs text-slate-500 dark:text-slate-500 mt-0.5">Usa estas keys en el header <code class="font-mono">Authorization: Bearer &lt;key&gt;</code></p>
       </div>
       <form method="post" action="/dashboard/keys/new" class="flex items-center gap-2">
-        <input type="text" name="name" placeholder="Nombre (opciónal)" maxlength="80"
-               class="px-3 py-2 border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900">
-        <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors">
+        <input type="text" name="name" placeholder="Nombre (opcional)" maxlength="80"
+               class="px-3 py-2 bg-white dark:bg-slate-950 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 placeholder:text-slate-400 dark:placeholder:text-slate-600">
+        <button type="submit" class="px-4 py-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded-lg text-sm font-semibold hover:bg-slate-800 dark:hover:bg-slate-200 transition-colors">
           Nueva key
         </button>
       </form>
@@ -149,7 +149,7 @@
         </thead>
         <tbody>
           {% for k in keys %}
-            <tr class="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:bg-slate-900/40/50 transition-colors">
+            <tr class="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
               <td class="px-6 py-4 font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300">{{ k.key_prefix }}...</td>
               <td class="px-6 py-4">{{ k.name or '-' }}</td>
               <td class="px-6 py-4">
@@ -171,7 +171,7 @@
               <td class="px-6 py-4 text-right">
                 {% if k.is_active %}
                   <form method="post" action="/dashboard/keys/{{ k.id }}/revoke" class="inline">
-                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:text-red-300 hover:underline text-sm font-medium">Revocar</button>
+                    <button type="submit" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:underline text-sm font-medium">Revocar</button>
                   </form>
                 {% else %}
                   <form method="post" action="/dashboard/keys/{{ k.id }}/reactivate" class="inline">
