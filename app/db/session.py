@@ -5,8 +5,16 @@ from app.core.config import get_settings
 
 settings = get_settings()
 
+# Railway entrega DATABASE_URL con prefijo postgresql:// (driver psycopg2).
+# Como acá usamos asyncpg, parchemos el prefijo cuando hace falta.
+db_url = settings.database_url
+if db_url.startswith("postgresql://"):
+    db_url = "postgresql+asyncpg://" + db_url[len("postgresql://"):]
+elif db_url.startswith("postgres://"):
+    db_url = "postgresql+asyncpg://" + db_url[len("postgres://"):]
+
 engine = create_async_engine(
-    settings.database_url,
+    db_url,
     echo=settings.app_debug,
     future=True,
     pool_pre_ping=True,

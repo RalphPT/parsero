@@ -23,9 +23,15 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Sobreescribir sqlalchemy.url con el de Settings (cargado desde .env)
+# Sobreescribir sqlalchemy.url con el de Settings (cargado desde .env).
+# Railway entrega DATABASE_URL con prefijo postgresql://; lo pasamos a asyncpg.
 settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.database_url)
+db_url = settings.database_url
+if db_url.startswith("postgresql://"):
+    db_url = "postgresql+asyncpg://" + db_url[len("postgresql://"):]
+elif db_url.startswith("postgres://"):
+    db_url = "postgresql+asyncpg://" + db_url[len("postgres://"):]
+config.set_main_option("sqlalchemy.url", db_url)
 
 target_metadata = Base.metadata
 
