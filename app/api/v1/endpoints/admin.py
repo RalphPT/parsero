@@ -21,7 +21,10 @@ from app.schemas.api_key import (
 )
 from app.schemas.tenant import TenantCreate, TenantResponse
 
-router = APIRouter(dependencies=[Depends(verify_admin)])
+router = APIRouter(
+    dependencies=[Depends(verify_admin)],
+    include_in_schema=False,  # No exponer endpoints internos en Swagger público
+)
 
 
 @router.get("/tenants", response_model=list[TenantResponse])
