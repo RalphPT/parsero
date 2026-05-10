@@ -40,3 +40,8 @@ Thumbs.db
 # ─── Docker volumes locales (si se montan) ───
 postgres_data/
 redis_data/
+
+# ─── Notas personales (no compartir) ─────────
+CONTEXT.md
+NOTES.md
+TODO.md
