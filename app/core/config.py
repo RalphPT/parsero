@@ -25,7 +25,8 @@ class Settings(BaseSettings):
     #  LLM provider 
     # Cuál se usa en Fase 3. La key correspondiente debe estar seteada.
     llm_provider: Literal["gemini", "anthropic", "ollama"] = "gemini"
-    llm_max_tokens: int = 2048
+    # Subido a 4096 porque facturas/CVs detallados pueden exceder 2k tokens en JSON
+    llm_max_tokens: int = 4096
 
     #  Gemini (default en dev - free tier) 
     gemini_api_key: Optional[str] = None

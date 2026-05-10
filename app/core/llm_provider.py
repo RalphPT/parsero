@@ -69,7 +69,19 @@ class GeminiProvider(LLMProvider):
             if response.usage_metadata:
                 self._input_tokens = response.usage_metadata.prompt_token_count
                 self._output_tokens = response.usage_metadata.candidates_token_count
+
+            # Detectar si Gemini cortó la respuesta por límite de tokens
+            if response.candidates:
+                finish = response.candidates[0].finish_reason
+                # finish_reason 2 = MAX_TOKENS en la SDK de google-generativeai
+                if str(finish) in ("FinishReason.MAX_TOKENS", "MAX_TOKENS", "2"):
+                    raise LLMUpstreamError(
+                        "El LLM truncó la respuesta por exceder max_output_tokens "
+                        f"({self._max_tokens}). Sube LLM_MAX_TOKENS en .env."
+                    )
             return response.text
+        except LLMUpstreamError:
+            raise
         except Exception as e:
             raise LLMUpstreamError(f"Gemini API: {type(e).__name__}: {e}") from e
 
