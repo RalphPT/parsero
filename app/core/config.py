@@ -25,8 +25,9 @@ class Settings(BaseSettings):
     #  LLM provider 
     # Cuál se usa en Fase 3. La key correspondiente debe estar seteada.
     llm_provider: Literal["gemini", "anthropic", "ollama"] = "gemini"
-    # Subido a 4096 porque facturas/CVs detallados pueden exceder 2k tokens en JSON
-    llm_max_tokens: int = 4096
+    # Gemini 2.5 Flash soporta hasta 8192 tokens de output. Documentos detallados
+    # (facturas con muchos line items, CVs largos) pueden necesitar todo el espacio.
+    llm_max_tokens: int = 8192
 
     #  Gemini (default en dev - free tier) 
     gemini_api_key: Optional[str] = None

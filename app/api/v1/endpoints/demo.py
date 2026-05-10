@@ -120,9 +120,10 @@ async def demo_extract(
             ),
         )
     except LLMUpstreamError as e:
+        # El mensaje ya viene en formato user-friendly desde llm_provider.
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"LLM upstream falló: {e}",
+            detail=str(e),
         )
 
     # Llegamos al LLM y consumimos tokens. A partir de acá SÍ contamos

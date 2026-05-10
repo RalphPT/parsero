@@ -1,10 +1,14 @@
 """LLM provider abstraction layer."""
+import logging
 from abc import ABC, abstractmethod
+
 import google.generativeai as genai
+
 from app.core.config import get_settings
 from app.core.exceptions import LLMUpstreamError
 
 
+logger = logging.getLogger(__name__)
 LLM_TIMEOUT_SECONDS = 60
 
 
@@ -75,15 +79,23 @@ class GeminiProvider(LLMProvider):
                 finish = response.candidates[0].finish_reason
                 # finish_reason 2 = MAX_TOKENS en la SDK de google-generativeai
                 if str(finish) in ("FinishReason.MAX_TOKENS", "MAX_TOKENS", "2"):
+                    logger.warning(
+                        "Gemini truncó respuesta por MAX_TOKENS (limite=%d, output=%d)",
+                        self._max_tokens, self._output_tokens,
+                    )
                     raise LLMUpstreamError(
-                        "El LLM truncó la respuesta por exceder max_output_tokens "
-                        f"({self._max_tokens}). Sube LLM_MAX_TOKENS en .env."
+                        "El documento tiene demasiado contenido para procesar. "
+                        "Intenta con un PDF más corto o contáctanos si necesitas "
+                        "procesar documentos extensos."
                     )
             return response.text
         except LLMUpstreamError:
             raise
         except Exception as e:
-            raise LLMUpstreamError(f"Gemini API: {type(e).__name__}: {e}") from e
+            logger.error("Gemini API error: %s: %s", type(e).__name__, e)
+            raise LLMUpstreamError(
+                "El servicio de IA no está respondiendo. Intenta de nuevo en unos segundos."
+            ) from e
 
     def get_usage_tokens(self) -> tuple[int, int]:
         return self._input_tokens, self._output_tokens
