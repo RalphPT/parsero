@@ -84,9 +84,8 @@ class GeminiProvider(LLMProvider):
                         self._max_tokens, self._output_tokens,
                     )
                     raise LLMUpstreamError(
-                        "El documento tiene demasiado contenido para procesar. "
-                        "Intenta con un PDF más corto o contáctanos si necesitas "
-                        "procesar documentos extensos."
+                        "No pudimos procesar este documento completamente. "
+                        "Intenta de nuevo o prueba con un PDF más simple."
                     )
             return response.text
         except LLMUpstreamError:
