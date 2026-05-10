@@ -95,27 +95,86 @@
     ::selection { background: rgb(249 115 22 / 0.25); color: rgb(15 23 42); }
     .dark ::selection { background: rgb(249 115 22 / 0.35); color: rgb(248 250 252); }
 
-    /* Pulse para badge "live" */
-    @keyframes ping-soft {
-      0% { transform: scale(1); opacity: 0.8; }
-      100% { transform: scale(2.5); opacity: 0; }
-    }
-    .ping-soft::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 9999px;
-      background: currentColor;
-      animation: ping-soft 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-    }
-
     /* Scrollbar slim en code blocks */
     pre::-webkit-scrollbar { height: 8px; width: 8px; }
     pre::-webkit-scrollbar-track { background: transparent; }
     pre::-webkit-scrollbar-thumb { background: rgb(255 255 255 / 0.1); border-radius: 4px; }
+
+    /* Aurora orbs animados (hero) */
+    @keyframes float-slow {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+      33%      { transform: translate3d(30px, -25px, 0) scale(1.08); }
+      66%      { transform: translate3d(-25px, 25px, 0) scale(0.95); }
+    }
+    .orb {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(70px);
+      pointer-events: none;
+      will-change: transform;
+      animation: float-slow 18s ease-in-out infinite;
+    }
+    .orb-2 { animation-duration: 22s; animation-delay: -6s; }
+    .orb-3 { animation-duration: 26s; animation-delay: -12s; }
+    @media (prefers-reduced-motion: reduce) {
+      .orb { animation: none; }
+    }
+
+    /* Card con border gradient sutil al hover */
+    .card-glow {
+      position: relative;
+      isolation: isolate;
+    }
+    .card-glow::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgb(249 115 22 / 0.5) 0%, rgb(99 102 241 / 0.25) 50%, transparent 100%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+              mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+    .card-glow:hover::before { opacity: 1; }
+
+    /* Skeleton loading (pulse) */
+    .skeleton {
+      background: linear-gradient(90deg, rgb(226 232 240) 0%, rgb(241 245 249) 50%, rgb(226 232 240) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite linear;
+      border-radius: 6px;
+    }
+    .dark .skeleton {
+      background: linear-gradient(90deg, rgb(30 41 59) 0%, rgb(51 65 85) 50%, rgb(30 41 59) 100%);
+      background-size: 200% 100%;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Scroll progress indicator */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #f97316, #ea580c);
+      transform-origin: 0 50%;
+      transform: scaleX(0);
+      transition: transform 0.05s linear;
+      z-index: 60;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased transition-colors">
+
+  <div id="scroll-progress"></div>
 
   <header class="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -248,6 +307,56 @@
         });
       }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
       document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+
+    // Scroll progress indicator
+    (function() {
+      const bar = document.getElementById('scroll-progress');
+      if (!bar) return;
+      let ticking = false;
+      function update() {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        const ratio = max > 0 ? Math.min(h.scrollTop / max, 1) : 0;
+        bar.style.transform = 'scaleX(' + ratio + ')';
+        ticking = false;
+      }
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(update);
+          ticking = true;
+        }
+      }, { passive: true });
+    })();
+
+    // Animated counter para [data-counter]
+    (function() {
+      if (!('IntersectionObserver' in window)) return;
+      const ease = t => 1 - Math.pow(1 - t, 3);
+      function animate(el) {
+        const target = parseInt(el.dataset.counter || '0', 10);
+        if (isNaN(target) || target === 0) {
+          el.textContent = target.toLocaleString('es');
+          return;
+        }
+        const duration = 1200;
+        const start = performance.now();
+        function step(now) {
+          const progress = Math.min((now - start) / duration, 1);
+          el.textContent = Math.round(target * ease(progress)).toLocaleString('es');
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            animate(e.target);
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      document.querySelectorAll('[data-counter]').forEach(el => observer.observe(el));
     })();
   </script>
 

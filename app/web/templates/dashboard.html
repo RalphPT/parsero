@@ -51,11 +51,11 @@
           <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
         </svg>
       </div>
-      <div class="text-4xl font-extrabold tracking-tight tabular-nums">{{ usage.extractions_count }}</div>
+      <div class="text-4xl font-extrabold tracking-tight tabular-nums" data-counter="{{ usage.extractions_count }}">{{ usage.extractions_count }}</div>
       <div class="text-sm text-slate-500 dark:text-slate-500 mt-1">extracciones en {{ usage.billing_period }}</div>
       <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs text-slate-500 dark:text-slate-500">
-        <span>{{ usage.input_tokens }} tokens in</span>
-        <span>{{ usage.output_tokens }} tokens out</span>
+        <span><span class="tabular-nums font-medium text-slate-700 dark:text-slate-300" data-counter="{{ usage.input_tokens }}">{{ usage.input_tokens }}</span> tokens in</span>
+        <span><span class="tabular-nums font-medium text-slate-700 dark:text-slate-300" data-counter="{{ usage.output_tokens }}">{{ usage.output_tokens }}</span> tokens out</span>
       </div>
     </div>
 
