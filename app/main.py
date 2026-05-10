@@ -23,8 +23,17 @@ app = FastAPI(
     version=settings.app_version,
     debug=settings.app_debug,
     lifespan=lifespan,
-    docs_url="/docs" if not settings.is_production else None,
-    redoc_url="/redoc" if not settings.is_production else None,
+    docs_url="/docs",
+    redoc_url="/redoc",
+    description=(
+        "API SaaS para extraer datos estructurados de documentos (facturas, "
+        "CVs, recibos) usando IA.\n\n"
+        "**Auth**:\n"
+        "- Endpoints `/extract`, `/me*`: header `Authorization: Bearer psr_...`\n"
+        "- Endpoints `/admin/*`: header `X-Admin-Token` (uso interno)\n"
+        "- Endpoints `/account/*` y `/billing/*`: cookie de sesión o JWT\n\n"
+        "Para conseguir tu API key, [crea una cuenta](/signup) gratis."
+    ),
 )
 
 app.add_middleware(
