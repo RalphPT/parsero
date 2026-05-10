@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Parsero{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-12">
+  {# Header con plan actual #}
+  <div class="flex items-start justify-between mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">Hola, {{ tenant.name }}</h1>
+      <p class="text-slate-600 mt-1">{{ tenant.email }}</p>
+    </div>
+    <div class="text-right">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 text-white text-sm font-medium">
+        Plan {{ tenant.plan.value|capitalize }}
+      </div>
+      {% if tenant.subscription_status %}
+        <p class="text-xs text-slate-500 mt-1">Status: {{ tenant.subscription_status }}</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {# Recién creó una API key — mostrarla con copy button #}
+  {% if new_api_key %}
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-8">
+      <div class="font-medium text-amber-900">Nueva API key creada</div>
+      <p class="text-sm text-amber-800 mt-1">Guardala ahora — no se volverá a mostrar.</p>
+      <div class="mt-3 flex gap-2">
+        <input type="text" readonly value="{{ new_api_key }}" id="newkey"
+               class="flex-1 font-mono text-sm px-3 py-2 border border-amber-300 rounded-lg bg-white">
+        <button onclick="navigator.clipboard.writeText(document.getElementById('newkey').value); this.textContent='Copiado ✓'"
+                class="px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 text-sm">
+          Copiar
+        </button>
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="grid md:grid-cols-3 gap-6 mb-8">
+    {# Usage del mes #}
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <div class="text-xs uppercase text-slate-500 font-medium">Uso del mes ({{ usage.billing_period }})</div>
+      <div class="mt-2 text-3xl font-bold">{{ usage.extractions_count }}</div>
+      <div class="text-sm text-slate-600">extracciones</div>
+      <div class="mt-3 text-xs text-slate-500">
+        Tokens: {{ usage.input_tokens }} in / {{ usage.output_tokens }} out
+      </div>
+    </div>
+
+    {# Plan actual #}
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <div class="text-xs uppercase text-slate-500 font-medium">Plan</div>
+      <div class="mt-2 text-3xl font-bold">{{ tenant.plan.value|capitalize }}</div>
+      <div class="text-sm text-slate-600">{{ rate_limit }} req/min</div>
+    </div>
+
+    {# Upgrade / portal #}
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <div class="text-xs uppercase text-slate-500 font-medium">Suscripción</div>
+      {% if tenant.lemon_subscription_id %}
+        <form method="post" action="/dashboard/portal" class="mt-2">
+          <button type="submit" class="w-full px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-medium">
+            Gestionar (cambiar/cancelar)
+          </button>
+        </form>
+      {% else %}
+        <form method="post" action="/dashboard/upgrade" class="mt-2 space-y-2">
+          <button type="submit" name="plan" value="starter" class="w-full px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 text-sm font-medium">
+            Upgrade a Starter ($19)
+          </button>
+          <button type="submit" name="plan" value="pro" class="w-full px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-medium">
+            Upgrade a Pro ($79)
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  {# API keys #}
+  <div class="bg-white rounded-xl border border-slate-200">
+    <div class="flex items-center justify-between p-6 border-b border-slate-200">
+      <h2 class="text-xl font-semibold">API keys</h2>
+      <form method="post" action="/dashboard/keys/new" class="flex items-center gap-2">
+        <input type="text" name="name" placeholder="Nombre (opcional)" maxlength="80"
+               class="px-3 py-2 border border-slate-300 rounded-lg text-sm">
+        <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-medium hover:bg-slate-800">
+          + Nueva key
+        </button>
+      </form>
+    </div>
+
+    {% if keys %}
+      <table class="w-full text-sm">
+        <thead class="bg-slate-50">
+          <tr>
+            <th class="text-left px-6 py-3 text-xs uppercase text-slate-500 font-medium">Prefix</th>
+            <th class="text-left px-6 py-3 text-xs uppercase text-slate-500 font-medium">Nombre</th>
+            <th class="text-left px-6 py-3 text-xs uppercase text-slate-500 font-medium">Status</th>
+            <th class="text-left px-6 py-3 text-xs uppercase text-slate-500 font-medium">Última usada</th>
+            <th class="px-6 py-3"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for k in keys %}
+            <tr class="border-t border-slate-100">
+              <td class="px-6 py-3 font-mono">{{ k.key_prefix }}…</td>
+              <td class="px-6 py-3">{{ k.name or '—' }}</td>
+              <td class="px-6 py-3">
+                {% if k.is_active %}
+                  <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Activa</span>
+                {% else %}
+                  <span class="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs rounded">Revocada</span>
+                {% endif %}
+              </td>
+              <td class="px-6 py-3 text-slate-600">
+                {{ k.last_used_at.strftime('%Y-%m-%d %H:%M') if k.last_used_at else '—' }}
+              </td>
+              <td class="px-6 py-3 text-right">
+                {% if k.is_active %}
+                  <form method="post" action="/dashboard/keys/{{ k.id }}/revoke" class="inline">
+                    <button type="submit" class="text-red-600 hover:underline text-sm">Revocar</button>
+                  </form>
+                {% else %}
+                  <form method="post" action="/dashboard/keys/{{ k.id }}/reactivate" class="inline">
+                    <button type="submit" class="text-slate-600 hover:underline text-sm">Reactivar</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="p-6 text-slate-500 text-sm">Todavía no tenés API keys.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

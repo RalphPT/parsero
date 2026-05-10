@@ -1,0 +1,8 @@
+Alembic — migraciones de Parsero.
+
+Comandos útiles (vía Makefile):
+  make migrate m="descripcion"   # genera nueva revisión autogenerada
+  make upgrade                    # aplica migraciones pendientes
+  make reset                      # downgrade base + upgrade head (solo dev)
+
+env.py es async (asyncpg). target_metadata = app.db.base.Base.metadata.

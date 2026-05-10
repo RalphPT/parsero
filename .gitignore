@@ -1,0 +1,42 @@
+# ─── Entornos virtuales ──────────────────────
+.venv/
+venv/
+env/
+
+# ─── Python ──────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# ─── Tests / coverage ────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ─── Linters / type checkers ─────────────────
+.mypy_cache/
+.ruff_cache/
+.pyright/
+
+# ─── Secrets ─────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── IDE / herramientas locales ──────────────
+.vscode/
+.idea/
+.claude/
+.cursor/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ─── Docker volumes locales (si se montan) ───
+postgres_data/
+redis_data/

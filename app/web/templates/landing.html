@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Parsero — API de extracción con IA{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-4 py-20 text-center">
+  <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-slate-900">
+    Extracción estructurada<br>de documentos con IA
+  </h1>
+  <p class="mt-6 text-xl text-slate-600 max-w-2xl mx-auto">
+    Convierte facturas, CVs y recibos en JSON limpio en segundos.
+    Una sola llamada a nuestra API y olvídate del scraping manual.
+  </p>
+  <div class="mt-10 flex items-center justify-center gap-4">
+    <a href="/signup" class="px-6 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800">
+      Empezar gratis
+    </a>
+    <a href="/pricing" class="px-6 py-3 border border-slate-300 rounded-lg font-medium hover:bg-white">
+      Ver pricing
+    </a>
+  </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 py-16">
+  <div class="grid md:grid-cols-3 gap-8">
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="text-lg font-semibold">Rápido</h3>
+      <p class="mt-2 text-slate-600 text-sm">
+        Menos de 5 segundos por documento. Cache automático por hash;
+        si pediste lo mismo antes la segunda vez es instantánea.
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="text-lg font-semibold">Estructurado</h3>
+      <p class="mt-2 text-slate-600 text-sm">
+        Schemas predefinidos para invoice, CV y receipt. El JSON viene
+        validado, sin que tengas que parsear nada.
+      </p>
+    </div>
+    <div class="bg-white p-6 rounded-xl border border-slate-200">
+      <h3 class="text-lg font-semibold">Simple</h3>
+      <p class="mt-2 text-slate-600 text-sm">
+        API REST con bearer auth. Una llamada, un JSON. Lo mismo
+        desde Python, Node, Go o curl.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="max-w-4xl mx-auto px-4 py-16">
+  <h2 class="text-3xl font-bold text-center mb-8">Una sola llamada</h2>
+  <pre class="bg-slate-900 text-slate-100 p-6 rounded-xl overflow-x-auto text-sm"><code>curl -X POST https://api.parsero.dev/api/v1/extract \
+  -H "Authorization: Bearer psr_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document_url": "https://example.com/factura.pdf",
+    "schema_type": "invoice"
+  }'
+
+# Response
+{
+  "id": "abc-123",
+  "status": "completed",
+  "data": {
+    "invoice_number": "INV-2026-001",
+    "vendor": { "name": "Acme Corp", ... },
+    "total": 1234.56,
+    "currency": "USD"
+  }
+}</code></pre>
+</section>
+{% endblock %}
