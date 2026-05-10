@@ -1,4 +1,4 @@
-"""Endpoint demo publico (sin auth, rate-limited por IP) para la landing page."""
+"""Endpoint demo público (sin auth, rate-limited por IP) para la landing page."""
 import json
 from typing import Optional
 
@@ -22,7 +22,7 @@ router = APIRouter()
 
 VALID_SCHEMAS = frozenset({"invoice", "cv", "receipt"})
 
-# Maximo de demos gratis por IP por dia
+# Máximo de demos gratis por IP por dia
 DEMO_LIMIT_PER_DAY = 3
 DEMO_TTL_SECONDS = 86400  # 24h
 
@@ -42,8 +42,8 @@ async def demo_extract(
     redis=Depends(get_redis),
 ):
     """
-    Extraccion publica sin auth. Limite de 3 requests por IP por dia.
-    No persiste nada en BD - solo devuelve el JSON extraido.
+    Extracción pública sin auth. Limite de 3 requests por IP por dia.
+    No persiste nada en BD - solo devuelve el JSON extraído.
     """
     if body.schema_type not in VALID_SCHEMAS:
         raise HTTPException(

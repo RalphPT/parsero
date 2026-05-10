@@ -114,7 +114,7 @@
         <div class="w-10 h-10 rounded-lg bg-slate-900 text-white grid place-items-center font-bold mb-4">1</div>
         <h3 class="font-semibold text-lg">Crea tu cuenta</h3>
         <p class="mt-2 text-sm text-slate-600 leading-relaxed">
-          Email + contrasena. Verificas el correo y recibes tu primera API key
+          Email + contraseña. Verificas el correo y recibes tu primera API key
           al instante.
         </p>
       </div>
@@ -201,7 +201,7 @@
             <polyline points="13 2 13 10 21 10 11 22 11 14 3 14 13 2"/>
           </svg>
         </div>
-        <h3 class="font-semibold">Rapido</h3>
+        <h3 class="font-semibold">Rápido</h3>
         <p class="mt-2 text-sm text-slate-600">
           Menos de 5 segundos por documento. Cache por hash: si pediste el
           mismo PDF antes, la segunda vez es instantaneo.
@@ -314,7 +314,7 @@
         </summary>
         <p class="mt-3 text-sm text-slate-600">
           No guardamos el PDF. Solo persistimos el hash SHA-256 (para el cache),
-          el JSON extraido y los tokens consumidos. El binario del documento se
+          el JSON extraído y los tokens consumidos. El binario del documento se
           procesa en memoria y se descarta.
         </p>
       </details>
@@ -325,10 +325,10 @@
           <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
         </summary>
         <p class="mt-3 text-sm text-slate-600">
-          Gemini 2.5 Flash de Google. El texto extraido del PDF viaja a la API
-          de Google segun
-          <a href="https://ai.google.dev/gemini-api/terms" class="text-brand-600 hover:underline">su politica de privacidad</a>.
-          Si tu caso requiere un proveedor especifico (Claude, modelo on-prem),
+          Gemini 2.5 Flash de Google. El texto extraído del PDF viaja a la API
+          de Google según
+          <a href="https://ai.google.dev/gemini-api/terms" class="text-brand-600 hover:underline">su política de privacidad</a>.
+          Si tu caso requiere un proveedor específico (Claude, modelo on-prem),
           escríbenos.
         </p>
       </details>
@@ -339,8 +339,8 @@
           <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
         </summary>
         <p class="mt-3 text-sm text-slate-600">
-          Railway en region US-West. Postgres y Redis tambien estan en Railway,
-          en la misma region. Si necesitas data residency en EU o LATAM,
+          Railway en región US-West. Postgres y Redis también estan en Railway,
+          en la misma región. Si necesitas data residency en EU o LATAM,
           escríbenos para coordinar.
         </p>
       </details>
@@ -352,8 +352,8 @@
         </summary>
         <p class="mt-3 text-sm text-slate-600">
           Hasheamos cada key con SHA-256 al crearla. La key en claro se muestra
-          una vez en el dashboard y nunca mas. Aunque alguien acceda a la BD,
-          no puede recuperar las keys originales. Podes revocar y rotar
+          una vez en el dashboard y nunca más. Aunque alguien acceda a la BD,
+          no puede recuperar las keys originales. Puedes revocar y rotar
           cuando quieras.
         </p>
       </details>
@@ -365,8 +365,8 @@
         </summary>
         <p class="mt-3 text-sm text-slate-600">
           Por ahora no formalmente, somos v0.1. Si tu caso de uso requiere
-          certificacion, escríbenos a hola@parsero.dev y armamos un plan
-          a medida (DPA, region especifica, etc.).
+          certificación, escríbenos a hola@parsero.dev y armamos un plan
+          a medida (DPA, región específica, etc.).
         </p>
       </details>
 
@@ -378,8 +378,8 @@
         <p class="mt-3 text-sm text-slate-600">
           Si.
           <a href="https://github.com/RalphPT/parsero" class="text-brand-600 hover:underline">github.com/RalphPT/parsero</a>.
-          Podes auditar como manejamos auth, rate limiting y persistencia.
-          Si encontras algo, abri un issue o escríbenos.
+          Puedes auditar como manejamos auth, rate limiting y persistencia.
+          Si encuentras algo, abre un issue o escríbenos.
         </p>
       </details>
     </div>
@@ -441,7 +441,7 @@
           const remaining = body.demos_remaining ?? '?';
           result.innerHTML = `
             <div class="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 text-sm text-emerald-900 mb-3">
-              Extraccion exitosa. ${body.input_tokens} tokens in / ${body.output_tokens} out.
+              Extracción exitosa. ${body.input_tokens} tokens in / ${body.output_tokens} out.
               Te quedan <strong>${remaining}</strong> demos hoy.
             </div>
             <pre class="bg-slate-900 text-slate-100 rounded-lg p-4 overflow-x-auto text-xs font-mono leading-relaxed max-h-96"><code>${escapeHtml(JSON.stringify(body.data, null, 2))}</code></pre>
