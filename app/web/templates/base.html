@@ -3,31 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}Parsero{% endblock %}</title>
+  <title>{% block title %}Parsero — API de extracción con IA{% endblock %}</title>
   <meta name="description" content="API SaaS para extraer datos estructurados de facturas, CVs y recibos con IA.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50:  '#fff7ed',
+              100: '#ffedd5',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+            },
+          },
+        },
+      },
+    };
+  </script>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
-  <header class="border-b border-slate-200 bg-white">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="text-xl font-bold tracking-tight text-slate-900">
-        Parsero
+<body class="bg-white text-slate-900 min-h-screen flex flex-col">
+
+  <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 font-bold text-lg tracking-tight">
+        <span class="inline-block w-7 h-7 rounded-md bg-slate-900 text-white grid place-items-center text-sm font-bold">P</span>
+        <span>Parsero</span>
       </a>
-      <nav class="flex items-center gap-6 text-sm">
-        <a href="/pricing" class="text-slate-600 hover:text-slate-900">Pricing</a>
-        <a href="/docs" class="text-slate-600 hover:text-slate-900">API Docs</a>
+      <nav class="flex items-center gap-1 sm:gap-2 text-sm font-medium">
+        <a href="/pricing" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Precios</a>
+        <a href="/docs" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors hidden sm:inline-block">API</a>
         {% if tenant %}
-          <a href="/dashboard" class="text-slate-600 hover:text-slate-900">Dashboard</a>
+          <a href="/dashboard" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Dashboard</a>
           <form method="post" action="/logout" class="inline">
-            <button type="submit" class="text-slate-600 hover:text-slate-900">Logout</button>
+            <button type="submit" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Cerrar sesión</button>
           </form>
         {% else %}
-          <a href="/login" class="text-slate-600 hover:text-slate-900">Login</a>
-          <a href="/signup" class="px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800">
-            Sign up
+          <a href="/login" class="px-3 py-2 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Iniciar sesión</a>
+          <a href="/signup" class="ml-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 shadow-sm transition-all">
+            Crear cuenta
           </a>
         {% endif %}
       </nav>
@@ -36,16 +65,22 @@
 
   <main class="flex-1">
     {% if flash_error %}
-      <div class="max-w-6xl mx-auto px-4 mt-4">
-        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-          {{ flash_error }}
+      <div class="max-w-6xl mx-auto px-4 mt-6">
+        <div class="flex items-start gap-3 bg-red-50 border border-red-200 text-red-900 px-4 py-3 rounded-lg">
+          <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span class="text-sm">{{ flash_error }}</span>
         </div>
       </div>
     {% endif %}
     {% if flash_success %}
-      <div class="max-w-6xl mx-auto px-4 mt-4">
-        <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
-          {{ flash_success }}
+      <div class="max-w-6xl mx-auto px-4 mt-6">
+        <div class="flex items-start gap-3 bg-emerald-50 border border-emerald-200 text-emerald-900 px-4 py-3 rounded-lg">
+          <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <span class="text-sm">{{ flash_success }}</span>
         </div>
       </div>
     {% endif %}
@@ -53,14 +88,46 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="border-t border-slate-200 bg-white mt-12">
-    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-slate-500 flex justify-between">
-      <span>© 2026 Parsero</span>
-      <div class="flex gap-4">
-        <a href="/pricing" class="hover:text-slate-900">Pricing</a>
-        <a href="/docs" class="hover:text-slate-900">API</a>
+  <footer class="border-t border-slate-200 bg-slate-50 mt-20">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center gap-2 font-bold">
+            <span class="inline-block w-6 h-6 rounded-md bg-slate-900 text-white grid place-items-center text-xs font-bold">P</span>
+            <span>Parsero</span>
+          </div>
+          <p class="mt-3 text-sm text-slate-500 max-w-xs">
+            Extracción estructurada de documentos con IA.
+          </p>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3">Producto</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/pricing" class="text-slate-600 hover:text-slate-900">Precios</a></li>
+            <li><a href="/docs" class="text-slate-600 hover:text-slate-900">Documentación API</a></li>
+            <li><a href="/signup" class="text-slate-600 hover:text-slate-900">Crear cuenta</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3">Recursos</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/docs" class="text-slate-600 hover:text-slate-900">Swagger</a></li>
+            <li><a href="https://github.com/RalphPT/parsero" class="text-slate-600 hover:text-slate-900">GitHub</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-semibold uppercase text-slate-500 tracking-wider mb-3">Contacto</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="mailto:hola@parsero.dev" class="text-slate-600 hover:text-slate-900">hola@parsero.dev</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between gap-2 text-sm text-slate-500">
+        <span>© 2026 Parsero. Hecho desde Lima.</span>
+        <span class="font-mono text-xs">v0.1</span>
       </div>
     </div>
   </footer>
+
 </body>
 </html>

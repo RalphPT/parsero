@@ -1,66 +1,134 @@
 {% extends "base.html" %}
-{% block title %}Pricing — Parsero{% endblock %}
+{% block title %}Precios — Parsero{% endblock %}
 
 {% block content %}
-<section class="max-w-6xl mx-auto px-4 py-16">
-  <h1 class="text-4xl font-bold text-center mb-4">Pricing simple, sin sorpresas</h1>
-  <p class="text-center text-slate-600 mb-12">Prueba gratis. Actualiza cuando lo necesites.</p>
+<section class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 pb-8 text-center">
+  <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">Precios simples</h1>
+  <p class="mt-4 text-lg text-slate-600">Empieza gratis. Actualiza cuando lo necesites.</p>
+</section>
 
+<section class="max-w-6xl mx-auto px-4 sm:px-6 pb-20">
   <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
     {# Free #}
-    <div class="bg-white p-8 rounded-xl border border-slate-200">
-      <h3 class="text-xl font-bold">Free</h3>
-      <p class="mt-2 text-slate-600 text-sm">Para probar la API.</p>
-      <div class="mt-4 text-4xl font-bold">$0<span class="text-base font-normal text-slate-500">/mes</span></div>
-      <ul class="mt-6 space-y-2 text-sm text-slate-700">
-        <li>✓ 10 requests/min</li>
-        <li>✓ 3 schemas (invoice, cv, receipt)</li>
-        <li>✓ Cache automático</li>
-        <li>✗ Soporte por email</li>
-      </ul>
-      <a href="/signup" class="mt-8 block w-full text-center px-4 py-3 border border-slate-300 rounded-lg font-medium hover:bg-slate-50">
+    <div class="bg-white p-8 rounded-2xl border border-slate-200">
+      <div class="flex items-center justify-between mb-2">
+        <h3 class="text-lg font-bold">Free</h3>
+      </div>
+      <p class="text-slate-500 text-sm h-10">Para probar la API.</p>
+      <div class="mt-6 flex items-baseline gap-1">
+        <span class="text-5xl font-extrabold tracking-tight">$0</span>
+        <span class="text-slate-500">/mes</span>
+      </div>
+      <a href="/signup" class="mt-8 block w-full text-center px-4 py-3 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
         Empezar
       </a>
+      <ul class="mt-8 space-y-3 text-sm">
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>10 requests/minuto</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>3 schemas (invoice, cv, receipt)</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>Cache automático</span></li>
+        <li class="flex gap-2 text-slate-400"><svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span>Soporte por email</span></li>
+      </ul>
     </div>
 
-    {# Starter #}
-    <div class="bg-white p-8 rounded-xl border-2 border-slate-900 relative">
-      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-xs px-3 py-1 rounded-full">
+    {# Starter — destacado #}
+    <div class="relative bg-slate-900 text-white p-8 rounded-2xl shadow-xl md:scale-105">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
         Más popular
       </div>
-      <h3 class="text-xl font-bold">Starter</h3>
-      <p class="mt-2 text-slate-600 text-sm">Para equipos pequeños en producción.</p>
-      <div class="mt-4 text-4xl font-bold">$19<span class="text-base font-normal text-slate-500">/mes</span></div>
-      <ul class="mt-6 space-y-2 text-sm text-slate-700">
-        <li>✓ 100 requests/min</li>
-        <li>✓ 3 schemas</li>
-        <li>✓ Cache automático</li>
-        <li>✓ Soporte por email</li>
-      </ul>
-      <a href="/signup?plan=starter" class="mt-8 block w-full text-center px-4 py-3 bg-slate-900 text-white rounded-lg font-medium hover:bg-slate-800">
+      <h3 class="text-lg font-bold">Starter</h3>
+      <p class="text-slate-400 text-sm h-10">Para equipos pequeños en producción.</p>
+      <div class="mt-6 flex items-baseline gap-1">
+        <span class="text-5xl font-extrabold tracking-tight">$19</span>
+        <span class="text-slate-400">/mes</span>
+      </div>
+      <a href="/signup?plan=starter" class="mt-8 block w-full text-center px-4 py-3 bg-white text-slate-900 rounded-lg font-semibold hover:bg-slate-100 transition-all">
         Empezar
       </a>
+      <ul class="mt-8 space-y-3 text-sm">
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>100 requests/minuto</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>3 schemas</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>Cache automático</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>Soporte por email</span></li>
+      </ul>
     </div>
 
     {# Pro #}
-    <div class="bg-white p-8 rounded-xl border border-slate-200">
-      <h3 class="text-xl font-bold">Pro</h3>
-      <p class="mt-2 text-slate-600 text-sm">Para alto volumen.</p>
-      <div class="mt-4 text-4xl font-bold">$79<span class="text-base font-normal text-slate-500">/mes</span></div>
-      <ul class="mt-6 space-y-2 text-sm text-slate-700">
-        <li>✓ 500 requests/min</li>
-        <li>✓ 3 schemas</li>
-        <li>✓ Cache automático</li>
-        <li>✓ Soporte prioritario</li>
-      </ul>
-      <a href="/signup?plan=pro" class="mt-8 block w-full text-center px-4 py-3 border border-slate-300 rounded-lg font-medium hover:bg-slate-50">
+    <div class="bg-white p-8 rounded-2xl border border-slate-200">
+      <h3 class="text-lg font-bold">Pro</h3>
+      <p class="text-slate-500 text-sm h-10">Para alto volumen.</p>
+      <div class="mt-6 flex items-baseline gap-1">
+        <span class="text-5xl font-extrabold tracking-tight">$79</span>
+        <span class="text-slate-500">/mes</span>
+      </div>
+      <a href="/signup?plan=pro" class="mt-8 block w-full text-center px-4 py-3 border border-slate-300 rounded-lg font-semibold hover:bg-slate-50 transition-all">
         Empezar
       </a>
+      <ul class="mt-8 space-y-3 text-sm">
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>500 requests/minuto</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>3 schemas</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>Cache automático</span></li>
+        <li class="flex gap-2"><svg class="w-5 h-5 text-emerald-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg><span>Soporte prioritario</span></li>
+      </ul>
     </div>
   </div>
 
-  <p class="mt-8 text-center text-sm text-slate-500">
-    ¿Necesitas más volumen? <a href="mailto:hola@parsero.dev" class="text-slate-900 underline">Hablemos del plan Enterprise</a>.
-  </p>
+  <div class="mt-12 max-w-2xl mx-auto bg-slate-50 border border-slate-200 rounded-xl p-6 text-center">
+    <h3 class="font-semibold">¿Necesitas más volumen?</h3>
+    <p class="mt-1 text-sm text-slate-600">
+      Plan Enterprise con SLA, rate limits a medida y soporte directo.
+    </p>
+    <a href="mailto:hola@parsero.dev" class="mt-3 inline-block text-sm font-semibold text-brand-600 hover:text-brand-700">
+      Hablemos →
+    </a>
+  </div>
+</section>
+
+<section class="bg-slate-50 border-t border-slate-200">
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 py-16">
+    <h2 class="text-2xl font-bold text-center mb-8">Preguntas frecuentes</h2>
+    <div class="space-y-4">
+      <details class="bg-white border border-slate-200 rounded-lg p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>¿Necesito tarjeta de crédito para el plan Free?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          No. Te registras con email y arrancas. La tarjeta solo aparece si decides
+          actualizar a un plan pago.
+        </p>
+      </details>
+      <details class="bg-white border border-slate-200 rounded-lg p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>¿Qué pasa si paso el límite de requests?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          La API responde con 429 (Too Many Requests) y un header <span class="font-mono text-xs">Retry-After</span>.
+          No hay cobros sorpresa por overage.
+        </p>
+      </details>
+      <details class="bg-white border border-slate-200 rounded-lg p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>¿Puedo cancelar cuando quiera?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          Sí, desde el portal de Lemon Squeezy. Sin permanencia. Mantienes
+          el acceso hasta el final del período pagado.
+        </p>
+      </details>
+      <details class="bg-white border border-slate-200 rounded-lg p-5 group">
+        <summary class="font-semibold cursor-pointer list-none flex justify-between items-center">
+          <span>¿Soportan PDFs grandes o escaneados?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+        </summary>
+        <p class="mt-3 text-sm text-slate-600">
+          PDFs de hasta 5MB con texto extraíble. PDFs escaneados (puro imagen)
+          aún no, está en el roadmap.
+        </p>
+      </details>
+    </div>
+  </div>
 </section>
 {% endblock %}
