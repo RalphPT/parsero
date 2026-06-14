@@ -1,11 +1,13 @@
 # Parsero
 
-API que toma un PDF (factura, CV, recibo) y devuelve un JSON estructurado.
-Por debajo le pega a Gemini Flash con prompts y un schema Pydantic por cada
-tipo de documento. Cache por SHA-256 para no pagar dos veces la misma
-extracción.
+> API SaaS B2B que toma un PDF (factura, CV, recibo) y devuelve un JSON
+> estructurado validado. Hecho desde Lima por [Rafael Percca](https://github.com/RalphPT).
 
-Demo en vivo: https://parsero-production.up.railway.app
+**Demo en vivo:** https://parsero-production.up.railway.app
+
+Por debajo le pega a Gemini Flash con prompts ajustados y un schema Pydantic
+por cada tipo de documento. Cache por SHA-256 para no pagar dos veces la
+misma extracción.
 
 ## Stack
 
@@ -148,6 +150,20 @@ v0.1 corriendo en producción. Faltan:
 - Workers async (Celery) si en algún momento aparecen documentos que
   tarden mucho. Hoy con Gemini Flash y PDFs chicos, los 5 segundos
   bloqueando el request van bien.
+
+## Por qué construí esto
+
+Quería terminar un SaaS completo de punta a punta, no solo un MVP de
+juguete. Las APIs de extracción que ya existen (Mindee, Veryfi, Rossum,
+Affinda) están bien hechas pero (a) son caras para volúmenes chicos,
+(b) están pensadas para enterprise con onboarding largo, y (c) no
+operan con Merchant of Record amigable para LATAM.
+
+Parsero es mi intento de cubrir el caso "dev independiente o startup
+chica que necesita extraer datos de PDFs sin pagar $200/mes". El
+diferenciador no es la calidad del modelo (Gemini hace el trabajo
+pesado) sino el precio entrada y la simpleza de la integración:
+una API key, un endpoint, JSON pydantic-validado.
 
 ## Variables de entorno
 
