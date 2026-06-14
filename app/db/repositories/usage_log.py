@@ -1,4 +1,3 @@
-"""Repository for usage logs (token tracking for billing)."""
 from uuid import UUID
 from decimal import Decimal
 from datetime import datetime
@@ -8,8 +7,6 @@ from app.db.models.usage_log import UsageLog
 
 
 class UsageLogRepository:
-    """Track token usage and costs for billing."""
-
     def __init__(self, db: AsyncSession):
         self.db = db
 
@@ -23,7 +20,6 @@ class UsageLogRepository:
         cost_usd: Decimal,
         billing_period: str,  # YYYY-MM
     ) -> UsageLog:
-        """Log usage from an extraction job."""
         usage = UsageLog(
             tenant_id=tenant_id,
             job_id=job_id,

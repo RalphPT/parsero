@@ -10,53 +10,46 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
 
-    #  App 
+    # App
     app_name: str = "Parsero"
     app_version: str = "0.1.0"
     app_env: str = "development"
     app_debug: bool = False
 
-    #  Base de datos 
     database_url: str
-
-    #  Redis 
     redis_url: str = "redis://localhost:6379/0"
 
-    #  LLM provider 
-    # Cuál se usa en Fase 3. La key correspondiente debe estar seteada.
+    # LLM. Solo "gemini" implementado por ahora; los otros literals son para
+    # cuando agreguemos provider premium.
     llm_provider: Literal["gemini", "anthropic", "ollama"] = "gemini"
-    # Gemini 2.5 Flash soporta hasta 8192 tokens de output. Documentos detallados
-    # (facturas con muchos line items, CVs largos) pueden necesitar todo el espacio.
-    llm_max_tokens: int = 8192
+    llm_max_tokens: int = 8192  # Gemini Flash topea en 8192 de output
 
-    #  Gemini (default en dev - free tier) 
     gemini_api_key: Optional[str] = None
     gemini_model: str = "gemini-2.5-flash"
 
-    #  Anthropic (tier premium / opcional) 
     anthropic_api_key: Optional[str] = None
     claude_model: str = "claude-sonnet-4-6"
 
-    #  Seguridad 
+    # Auth
     secret_key: str
     jwt_algorithm: str = "HS256"
     jwt_session_ttl_hours: int = 24 * 7        # 7 días
-    jwt_email_verify_ttl_hours: int = 24       # 1 día
-    jwt_password_reset_ttl_hours: int = 1      # 1 hora
+    jwt_email_verify_ttl_hours: int = 24
+    jwt_password_reset_ttl_hours: int = 1
 
-    #  Resend (email transaccional) 
+    # Resend
     resend_api_key: Optional[str] = None
-    email_from: str = "Parsero <noreply@parsero.dev>"  # ajustar cuando haya dominio
-    public_base_url: str = "http://localhost:8000"     # base para los links en emails
+    email_from: str = "Parsero <noreply@parsero.dev>"
+    public_base_url: str = "http://localhost:8000"
 
-    #  Lemon Squeezy (billing, Fase 5.2) 
+    # Lemon Squeezy
     lemonsqueezy_api_key: Optional[str] = None
     lemonsqueezy_webhook_secret: Optional[str] = None
     lemonsqueezy_store_id: Optional[str] = None
     lemonsqueezy_variant_starter: Optional[str] = None
     lemonsqueezy_variant_pro: Optional[str] = None
 
-    #  Rate limiting 
+    # OJO: no se está usando todavía, los límites reales viven en core/rate_limits.py
     rate_limit_per_minute: int = 100
 
     @property
@@ -66,8 +59,4 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """
-    Singleton de settings - se cachea en el primer llamado.
-    Usar como dependencia en FastAPI: Depends(get_settings)
-    """
     return Settings()

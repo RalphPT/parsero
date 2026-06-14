@@ -1,4 +1,3 @@
-"""Auth, rate limiting y demás dependencies compartidas."""
 import secrets
 import time
 from datetime import datetime, timezone
@@ -25,9 +24,7 @@ settings = get_settings()
 
 LAST_USED_THROTTLE_SECONDS = 60  # Solo escribir last_used_at una vez por minuto
 
-#
-# Security schemes (registrados en OpenAPI -> botón "Authorize" en Swagger)
-#
+# Schemes registrados en OpenAPI - los tres botones "Authorize" del Swagger.
 admin_token_scheme = APIKeyHeader(
     name="X-Admin-Token",
     scheme_name="AdminToken",
@@ -48,13 +45,10 @@ jwt_scheme = HTTPBearer(
 )
 
 
-#
-# Admin (header X-Admin-Token)
-#
 async def verify_admin(
     x_admin_token: Optional[str] = Depends(admin_token_scheme),
 ) -> None:
-    """Endpoints administrativos: el header X-Admin-Token debe coincidir con SECRET_KEY."""
+    # X-Admin-Token tiene que coincidir con SECRET_KEY del .env.
     if not x_admin_token or not secrets.compare_digest(
         x_admin_token, settings.secret_key
     ):
@@ -64,9 +58,6 @@ async def verify_admin(
         )
 
 
-#
-# Auth de cliente (Bearer <api_key>)
-#
 async def get_current_api_key(
     creds: Optional[HTTPAuthorizationCredentials] = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db),
@@ -118,11 +109,8 @@ async def get_current_tenant(
     return api_key.tenant
 
 
-#
-# Auth de cliente vía JWT de sesión
-# Usado por endpoints /account/* del dashboard. No comparte path con
-# get_current_api_key para que Swagger pueda diferenciarlos.
-#
+# Para endpoints /account/* del dashboard. Aceptamos JWT por header (clientes
+# API) o por cookie (browser). El header tiene prioridad si vienen ambos.
 SESSION_COOKIE_NAME = "parsero_session"
 
 
@@ -131,12 +119,6 @@ async def get_current_user_jwt(
     parsero_session: Optional[str] = Cookie(default=None, alias=SESSION_COOKIE_NAME),
     db: AsyncSession = Depends(get_db),
 ) -> Tenant:
-    """
-    Resuelve el tenant a partir de:
-      1. Header `Authorization: Bearer <jwt>` (clientes API), o
-      2. Cookie `parsero_session=<jwt>` (browser, seteada en /auth/login)
-    Header tiene prioridad sobre cookie cuando ambos están presentes.
-    """
     token = creds.credentials if creds else parsero_session
     if not token:
         raise HTTPException(
@@ -157,15 +139,14 @@ async def get_current_user_jwt(
     return tenant
 
 
-#
-# Rate limiter (fixed window por minuto)
-#
+# Rate limiter fixed-window por minuto. Más simple que token bucket y para
+# nuestro caso (rate limit por plan) suficiente.
 async def enforce_rate_limit(
     tenant: Tenant = Depends(get_current_tenant),
     redis=Depends(get_redis),
 ) -> None:
     limit = RATE_LIMITS_PER_MINUTE[tenant.plan]
-    if limit == 0:  # 0 = ilimitado (enterprise)
+    if limit == 0:  # enterprise = sin límite
         return
 
     minute_bucket = int(time.time() // 60)
@@ -173,8 +154,7 @@ async def enforce_rate_limit(
 
     count = await redis.incr(bucket_key)
     if count == 1:
-        # Primera request del bucket: setear TTL para que el contador se
-        # autodestruya al cierre del minuto.
+        # Primer hit del bucket: TTL 60s para que se autodestruya.
         await redis.expire(bucket_key, 60)
 
     if count > limit:

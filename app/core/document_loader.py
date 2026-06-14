@@ -1,4 +1,3 @@
-"""Document loader for fetching and processing documents from URLs."""
 import hashlib
 from io import BytesIO
 import httpx
@@ -8,22 +7,11 @@ from app.core.exceptions import DocumentLoadError
 
 
 class DocumentLoader:
-    """Load and process documents from URLs."""
-
     MAX_SIZE = 5 * 1024 * 1024  # 5 MB
     MAX_CHARS = 50_000
 
     @staticmethod
     async def load_and_hash(url: str) -> tuple[str, str]:
-        """
-        Descarga documento, calcula SHA-256 y extrae texto.
-
-        Returns:
-            (document_text, sha256_hash)
-
-        Raises:
-            DocumentLoadError: si la descarga, tamaño o formato no son válidos.
-        """
         async with httpx.AsyncClient(timeout=60.0) as client:
             try:
                 response = await client.get(url, follow_redirects=True)

@@ -1,8 +1,8 @@
-"""Prompts para cada schema. System prompts incluyen reglas estrictas de
-normalización para que el output sea consistente entre llamadas."""
+# Prompts por schema. Los system prompts traen reglas duras de normalización
+# (ISO 4217 para currency, ISO 8601 para fechas, etc.) para que el output sea
+# consistente entre llamadas y entre documentos similares.
 
 
-# ─── Reglas comunes que aplican a todos los schemas ──────────────────
 NORMALIZATION_RULES = """
 Normalization rules (apply strictly):
 1. Dates: always ISO 8601 format YYYY-MM-DD. Convert any local format

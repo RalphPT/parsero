@@ -1,31 +1,18 @@
-"""
-Modelos Pydantic para validar el output del LLM.
-
-Cada schema_type tiene su propio modelo. Todos los campos son Optional -
-si Gemini no encuentra un campo, devolverá null y eso es OK. Lo que NO es
-OK es que devuelva un tipo incorrecto o estructura distinta a la pedida:
-en ese caso pydantic lanza ValidationError y el endpoint responde 422.
-"""
+# Modelos para validar el output del LLM. Si Gemini devuelve un campo con
+# tipo incorrecto o estructura distinta, pydantic lanza ValidationError y el
+# endpoint responde 422. Campos null son OK (no inventamos data).
 from typing import Optional
 from datetime import date as date_type
 from pydantic import BaseModel, ConfigDict
 
 
-#
-# Tipos compartidos
-#
 class _Strict(BaseModel):
-    """
-    Base. Validamos tipos pero ignoramos campos extras - los LLMs a veces
-    agregan campos auxiliares ('confidence', 'notes'...) y no es razón para
-    rechazar la extracción entera. Si los tipos están mal eso sí es 422.
-    """
+    # extra="ignore" porque los LLMs a veces agregan 'confidence', 'notes'
+    # y similares; no queremos rechazar la extracción por eso.
     model_config = ConfigDict(extra="ignore")
 
 
-#
-# Invoice
-#
+# Invoice ----------------------------------------------------------------
 class InvoiceParty(_Strict):
     name: Optional[str] = None
     email: Optional[str] = None
@@ -55,9 +42,7 @@ class InvoiceExtraction(_Strict):
     payment_terms: Optional[str] = None
 
 
-#
-# CV
-#
+# CV ---------------------------------------------------------------------
 class CVPersonal(_Strict):
     full_name: Optional[str] = None
     email: Optional[str] = None
@@ -105,9 +90,7 @@ class CVExtraction(_Strict):
     languages: Optional[list[CVLanguage]] = None
 
 
-#
-# Receipt
-#
+# Receipt ----------------------------------------------------------------
 class ReceiptMerchant(_Strict):
     name: Optional[str] = None
     address: Optional[str] = None
@@ -125,7 +108,7 @@ class ReceiptLineItem(_Strict):
 class ReceiptExtraction(_Strict):
     merchant: Optional[ReceiptMerchant] = None
     transaction_date: Optional[date_type] = None
-    transaction_time: Optional[str] = None  # HH:MM:SS - no hay tipo time JSON-friendly
+    transaction_time: Optional[str] = None  # HH:MM:SS como string (time no es JSON-friendly)
     line_items: Optional[list[ReceiptLineItem]] = None
     subtotal: Optional[float] = None
     tax: Optional[float] = None
@@ -136,9 +119,6 @@ class ReceiptExtraction(_Strict):
     loyalty_program: Optional[str] = None
 
 
-#
-# Registry: schema_type -> modelo Pydantic
-#
 SCHEMA_REGISTRY: dict[str, type[_Strict]] = {
     "invoice": InvoiceExtraction,
     "cv": CVExtraction,
@@ -147,7 +127,6 @@ SCHEMA_REGISTRY: dict[str, type[_Strict]] = {
 
 
 def get_output_model(schema_type: str) -> type[_Strict]:
-    """Devuelve el modelo Pydantic para validar el output del LLM."""
     if schema_type not in SCHEMA_REGISTRY:
         raise ValueError(f"schema_type desconocido: {schema_type}")
     return SCHEMA_REGISTRY[schema_type]

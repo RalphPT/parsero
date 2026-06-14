@@ -1,4 +1,5 @@
-"""Cliente HTTP de Lemon Squeezy (JSON:API)."""
+# Cliente para la API de Lemon Squeezy. Solo usamos checkouts y subscriptions
+# por ahora; el resto del catálogo (orders, customers crudos) no lo tocamos.
 from typing import Optional
 from uuid import UUID
 
@@ -11,7 +12,7 @@ LEMONSQUEEZY_API = "https://api.lemonsqueezy.com/v1"
 
 
 class LemonSqueezyError(RuntimeError):
-    """Error al llamar a la API de Lemon Squeezy."""
+    pass
 
 
 class LemonSqueezyService:
@@ -40,10 +41,9 @@ class LemonSqueezyService:
         tenant_email: str,
         success_redirect_url: Optional[str] = None,
     ) -> str:
-        """
-        Crea un checkout y devuelve la URL hosted donde el cliente completa el pago.
-        Embebemos `tenant_id` en custom_data para correlacionar el webhook después.
-        """
+        # Embebemos tenant_id en custom_data - es el único enlace que tenemos
+        # entre la subscription que crea LS y el tenant nuestro cuando llega
+        # el webhook.
         payload = {
             "data": {
                 "type": "checkouts",
@@ -90,7 +90,7 @@ class LemonSqueezyService:
         return resp.json()["data"]
 
     async def get_customer_portal_url(self, subscription_id: str) -> str:
-        """URL hosted del portal - el cliente entra y puede cancelar / cambiar tarjeta."""
+        # Portal hosted donde el cliente puede cambiar tarjeta, cancelar, etc.
         sub = await self.get_subscription(subscription_id)
         urls = sub.get("attributes", {}).get("urls", {})
         portal_url = urls.get("customer_portal")

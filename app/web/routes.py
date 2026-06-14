@@ -77,9 +77,8 @@ def _redirect(url: str, status_code: int = 303) -> RedirectResponse:
     return RedirectResponse(url=url, status_code=status_code)
 
 
-#
-# Páginas públicas
-#
+# --- Páginas públicas ---
+
 @router.get("/", response_class=HTMLResponse)
 async def landing(
     request: Request,
@@ -119,9 +118,8 @@ async def docs_page(
     )
 
 
-#
-# Signup
-#
+# --- Signup ---
+
 @router.get("/signup", response_class=HTMLResponse)
 async def signup_form(
     request: Request,
@@ -180,9 +178,8 @@ async def signup_submit(
     return _redirect("/login?signed_up=1")
 
 
-#
-# Login / Logout
-#
+# --- Login / Logout ---
+
 @router.get("/login", response_class=HTMLResponse)
 async def login_form(
     request: Request,
@@ -254,9 +251,8 @@ async def logout():
     return response
 
 
-#
-# Forgot / reset password
-#
+# --- Forgot / reset password ---
+
 @router.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_form(request: Request):
     return templates.TemplateResponse(
@@ -339,9 +335,8 @@ async def reset_submit(
     return _redirect("/login?password_reset=1")
 
 
-#
-# Verify email (callback del link del email)
-#
+# --- Verify email (callback del link) ---
+
 @router.get("/verify-email", response_class=HTMLResponse)
 async def verify_email(
     request: Request,
@@ -396,8 +391,7 @@ async def verify_email(
     )
 
 
-#
-# Dashboard (autenticado)
+# --- Dashboard (autenticado)
 #
 @router.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(

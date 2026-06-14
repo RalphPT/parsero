@@ -1,4 +1,3 @@
-"""Repository for extraction jobs."""
 from typing import Optional
 from uuid import UUID
 from datetime import datetime, timezone
@@ -9,8 +8,6 @@ from app.db.models.extraction_job import ExtractionJob, JobStatus, SchemaType
 
 
 class ExtractionJobRepository:
-    """Handle ExtractionJob CRUD operations."""
-
     def __init__(self, db: AsyncSession):
         self.db = db
 
@@ -40,7 +37,7 @@ class ExtractionJobRepository:
     async def get_by_hash_and_schema(
         self, tenant_id: UUID, source_hash: str, schema_type: str
     ) -> Optional[ExtractionJob]:
-        """Cache lookup: ¿hay un job completed para (tenant, hash, schema)?"""
+        # Lookup de cache: buscamos jobs ya completados con mismo (tenant, hash, schema).
         stmt = select(ExtractionJob).where(
             ExtractionJob.tenant_id == tenant_id,
             ExtractionJob.source_hash == source_hash,
@@ -60,7 +57,6 @@ class ExtractionJobRepository:
         output_tokens: Optional[int] = None,
         duration_ms: Optional[int] = None,
     ) -> Optional[ExtractionJob]:
-        """Actualiza estado del job. Setea completed_at automáticamente si termina."""
         job = await self.get(job_id)
         if job is None:
             return None

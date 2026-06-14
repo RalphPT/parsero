@@ -6,7 +6,7 @@ from app.core.config import get_settings
 settings = get_settings()
 
 # Railway entrega DATABASE_URL con prefijo postgresql:// (driver psycopg2).
-# Como acá usamos asyncpg, parchemos el prefijo cuando hace falta.
+# Como aquí usamos asyncpg, parchamos el prefijo cuando hace falta.
 db_url = settings.database_url
 if db_url.startswith("postgresql://"):
     db_url = "postgresql+asyncpg://" + db_url[len("postgresql://"):]
@@ -29,10 +29,6 @@ AsyncSessionLocal = async_sessionmaker(
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """
-    Dependencia FastAPI: abre sesión async, la cierra al terminar el request.
-    Uso: db: AsyncSession = Depends(get_db)
-    """
     async with AsyncSessionLocal() as session:
         try:
             yield session

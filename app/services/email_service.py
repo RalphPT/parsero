@@ -1,4 +1,5 @@
-"""Cliente de Resend. Sin RESEND_API_KEY, los emails van a stdout (modo dev)."""
+# Resend para emails transaccionales. Si RESEND_API_KEY no está seteado,
+# los emails salen por stdout - útil para dev local sin tocar Resend.
 import logging
 from typing import Optional
 
@@ -21,40 +22,42 @@ class EmailService:
 
     @property
     def is_live(self) -> bool:
-        """True si vamos a mandar emails reales; False si solo loguea."""
         return bool(self._api_key)
 
     async def send_verification_email(self, *, to: str, token: str) -> None:
         verify_url = f"{self._base_url}/verify-email?token={token}"
-        subject = "Verifica tu email en Parsero"
+        subject = "Confirma tu email en Parsero"
         html = f"""
-            <h2>Bienvenido a Parsero</h2>
-            <p>Haz click para verificar tu cuenta:</p>
-            <p><a href="{verify_url}">Verificar email</a></p>
-            <p>O copia este link: {verify_url}</p>
-            <p>Este link vence en 24 horas.</p>
+            <h2>Casi listo</h2>
+            <p>Un click más y activamos tu cuenta:</p>
+            <p><a href="{verify_url}">Confirmar email</a></p>
+            <p>Si el botón no funciona, pega este link en el navegador:<br>{verify_url}</p>
+            <p>El link vence en 24 horas.</p>
         """
         await self._send(to=to, subject=subject, html=html)
 
     async def send_password_reset_email(self, *, to: str, token: str) -> None:
         reset_url = f"{self._base_url}/reset-password?token={token}"
-        subject = "Restablece tu contraseña en Parsero"
+        subject = "Cambiar tu contraseña en Parsero"
         html = f"""
-            <h2>Restablecer contraseña</h2>
-            <p>Haz click para definir una nueva contraseña:</p>
+            <h2>Nueva contraseña</h2>
+            <p>Haz click para definirla:</p>
             <p><a href="{reset_url}">Cambiar contraseña</a></p>
-            <p>Si no fuiste tú, ignora este email.</p>
-            <p>Este link vence en 1 hora.</p>
+            <p>Si no pediste esto, ignora el email. Si lo ves repetido, avísanos.</p>
+            <p>El link vence en 1 hora.</p>
         """
         await self._send(to=to, subject=subject, html=html)
 
     async def send_welcome_email(self, *, to: str, api_key: str) -> None:
-        subject = "Tu cuenta de Parsero está activa"
+        subject = "Tu cuenta de Parsero está lista"
         html = f"""
-            <h2>Cuenta activada</h2>
-            <p>Tu primera API key:</p>
+            <h2>Bienvenido</h2>
+            <p>Aquí está tu primera API key. Cópiala y guárdala en un lugar seguro
+            (un password manager está bien) - no se vuelve a mostrar.</p>
             <pre>{api_key}</pre>
-            <p><strong>Guárdala bien</strong>, no se vuelve a mostrar.</p>
+            <p>Para usarla:<br>
+            <code>Authorization: Bearer {api_key[:12]}...</code></p>
+            <p>Cualquier duda, responde este mail.</p>
         """
         await self._send(to=to, subject=subject, html=html)
 
@@ -75,7 +78,6 @@ class EmailService:
             raise
 
 
-# Singleton - se construye una sola vez y se reusa
 _email_service: Optional[EmailService] = None
 
 

@@ -1,4 +1,3 @@
-"""LLM provider abstraction layer."""
 import logging
 from abc import ABC, abstractmethod
 
@@ -13,8 +12,6 @@ LLM_TIMEOUT_SECONDS = 60
 
 
 class LLMProvider(ABC):
-    """Abstract base for LLM providers."""
-
     @abstractmethod
     async def extract(
         self,
@@ -23,18 +20,14 @@ class LLMProvider(ABC):
         system_prompt: str,
         extraction_prompt: str,
     ) -> str:
-        """Llama al LLM y devuelve el JSON crudo (string)."""
         ...
 
     @abstractmethod
     def get_usage_tokens(self) -> tuple[int, int]:
-        """Tokens (input, output) de la última llamada."""
         ...
 
 
 class GeminiProvider(LLMProvider):
-    """Google Gemini Flash provider."""
-
     def __init__(self):
         settings = get_settings()
         if not settings.gemini_api_key:
@@ -52,10 +45,6 @@ class GeminiProvider(LLMProvider):
         system_prompt: str,
         extraction_prompt: str,
     ) -> str:
-        """
-        Llama a Gemini con timeout explícito y JSON mode.
-        Cualquier excepción del SDK se traduce a LLMUpstreamError -> 502.
-        """
         try:
             model = genai.GenerativeModel(
                 model_name=self._model_name,
@@ -74,7 +63,6 @@ class GeminiProvider(LLMProvider):
                 self._input_tokens = response.usage_metadata.prompt_token_count
                 self._output_tokens = response.usage_metadata.candidates_token_count
 
-            # Detectar si Gemini cortó la respuesta por límite de tokens
             if response.candidates:
                 finish = response.candidates[0].finish_reason
                 # finish_reason 2 = MAX_TOKENS en la SDK de google-generativeai
@@ -101,7 +89,6 @@ class GeminiProvider(LLMProvider):
 
 
 def get_llm_provider() -> LLMProvider:
-    """Construye el provider según settings.llm_provider."""
     settings = get_settings()
     if settings.llm_provider == "gemini":
         return GeminiProvider()

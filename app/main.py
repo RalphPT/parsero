@@ -12,7 +12,6 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup y shutdown de la aplicación."""
     print(f"[startup] {settings.app_name} v{settings.app_version} [{settings.app_env}]")
     yield
     print("[shutdown] bye")
@@ -36,6 +35,8 @@ app = FastAPI(
     ),
 )
 
+# FIXME: en prod allow_origins queda vacío -> bloquea todo cross-origin.
+# Cuando tenga dominio armado, listar aquí ["https://parsero.dev", ...]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"] if not settings.is_production else [],
@@ -51,7 +52,6 @@ app.include_router(web_router, include_in_schema=False)  # HTML routes - fuera d
 
 @app.get("/health", tags=["system"])
 async def health_check():
-    """Endpoint de salud para Railway y load balancers."""
     return {
         "status": "ok",
         "app": settings.app_name,

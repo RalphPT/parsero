@@ -1,4 +1,3 @@
-"""POST /extract y GET /extract/{id}."""
 import json
 import time
 from decimal import Decimal
@@ -53,26 +52,15 @@ async def extract_document(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(enforce_rate_limit),
 ) -> ExtractionJobResponse:
-    """
-    Extrae datos estructurados de un documento.
-
-    El POST espera la respuesta de Gemini y devuelve el status final del job.
-    Para v1 no usamos worker async - Gemini Flash suele responder en <5s.
-
-    Status codes:
-      - 202 + status=completed       -> extracción exitosa
-      - 202 + status=cached          -> cache hit (mismo doc + schema antes)
-      - 400                          -> documento inválido (URL/tamaño/formato)
-      - 422                          -> LLM devolvió JSON que no cumple el schema
-      - 502                          -> LLM upstream falló (timeout/red/5xx)
-    """
+    # Por ahora sync inline: Gemini Flash anda en <5s así que no vale la pena
+    # meter Celery todavía. Cuando aparezcan docs lentos sí, pero hoy es
+    # complejidad innecesaria.
     if body.schema_type not in VALID_SCHEMAS:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"schema_type debe ser uno de: {', '.join(sorted(VALID_SCHEMAS))}",
         )
 
-    # Descargar y hashear documento - DocumentLoadError -> 400
     try:
         document_text, source_hash = await DocumentLoader.load_and_hash(
             str(body.document_url)
@@ -80,7 +68,6 @@ async def extract_document(
     except DocumentLoadError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
-    # Cache hit: (tenant, hash, schema) ya extraído antes
     job_repo = ExtractionJobRepository(db)
     cached_job = await job_repo.get_by_hash_and_schema(
         api_key.tenant_id, source_hash, body.schema_type
@@ -92,7 +79,6 @@ async def extract_document(
             created_at=cached_job.created_at,
         )
 
-    # Crear job nuevo
     job = await job_repo.create(
         tenant_id=api_key.tenant_id,
         api_key_id=api_key.id,
@@ -102,8 +88,8 @@ async def extract_document(
     )
     await db.commit()
 
-    # Ejecutar extracción. Las excepciones se mapean a HTTP codes pero el job
-    # queda en BD como `failed` con error_message para auditoría/billing.
+    # Las excepciones se mapean a HTTP codes pero el job queda persistido como
+    # `failed` con error_message - así no perdemos tokens consumidos en auditoría.
     try:
         await _run_extraction(
             job_id=job.id,
@@ -137,7 +123,6 @@ async def get_extraction_result(
     db: AsyncSession = Depends(get_db),
     _: None = Depends(enforce_rate_limit),
 ) -> ExtractionResultResponse:
-    """Devuelve el resultado de un job. 404 si no existe o no es del tenant."""
     job_repo = ExtractionJobRepository(db)
     job = await job_repo.get(job_id)
 
@@ -168,16 +153,11 @@ async def _run_extraction(
     tenant_id: UUID,
     db: AsyncSession,
 ) -> None:
-    """
-    Llama LLM, valida output con Pydantic, persiste resultado + usage.
-    En cualquier fallo: marca el job como `failed` y re-raise la excepción
-    tipada para que el endpoint la traduzca a HTTP code.
-    """
     job_repo = ExtractionJobRepository(db)
     result_repo = ExtractionResultRepository(db)
     usage_repo = UsageLogRepository(db)
 
-    start_time = time.time()
+    t0 = time.time()
     input_tokens = 0
     output_tokens = 0
 
@@ -191,7 +171,6 @@ async def _run_extraction(
             document_text=document_text
         )
 
-        # 1. Llamada al LLM - puede levantar LLMUpstreamError (502)
         llm_response = await llm.extract(
             document_text=document_text,
             schema_type=schema_type,
@@ -200,7 +179,6 @@ async def _run_extraction(
         )
         input_tokens, output_tokens = llm.get_usage_tokens()
 
-        # 2. Parseo + validación Pydantic - fallos = LLMValidationError (422)
         try:
             raw_data = json.loads(llm_response)
         except json.JSONDecodeError as e:
@@ -212,14 +190,13 @@ async def _run_extraction(
         except ValidationError as e:
             raise LLMValidationError(f"Schema mismatch: {e.errors()}") from e
 
-        # 3. Persistir resultado validado (JSON-mode -> dates como string)
+        # mode="json" para que las fechas salgan como string y entren limpias al JSONB
         validated_dict = validated.model_dump(mode="json", exclude_none=False)
         await result_repo.create(job_id=job_id, extracted_data=validated_dict)
 
-        # 4. Usage log
         cost_usd = _calculate_cost(input_tokens, output_tokens)
         billing_period = datetime.utcnow().strftime("%Y-%m")
-        duration_ms = int((time.time() - start_time) * 1000)
+        duration_ms = int((time.time() - t0) * 1000)
         await usage_repo.log_extraction(
             tenant_id=tenant_id,
             job_id=job_id,
@@ -229,7 +206,6 @@ async def _run_extraction(
             billing_period=billing_period,
         )
 
-        # 5. Marcar como completed
         await job_repo.update_status(
             job_id,
             JobStatus.completed.value,
@@ -240,7 +216,6 @@ async def _run_extraction(
         await db.commit()
 
     except (LLMUpstreamError, LLMValidationError) as e:
-        # Persistir el fallo para auditoría/billing y re-raise
         await db.rollback()
         await job_repo.update_status(
             job_id,
@@ -248,12 +223,13 @@ async def _run_extraction(
             error_message=str(e),
             input_tokens=input_tokens or None,
             output_tokens=output_tokens or None,
-            duration_ms=int((time.time() - start_time) * 1000),
+            duration_ms=int((time.time() - t0) * 1000),
         )
         await db.commit()
         raise
 
 
 def _calculate_cost(input_tokens: int, output_tokens: int) -> Decimal:
-    """Costo en USD. Gemini Flash free tier: sin costo hasta 1M tokens/día."""
+    # Gemini Flash free tier cubre hasta 1M tokens/día. Cuando se pase, aquí
+    # va el cálculo real (input * $0.075/1M + output * $0.30/1M aprox).
     return Decimal("0.00")

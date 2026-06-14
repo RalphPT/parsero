@@ -63,7 +63,7 @@ async def main() -> int:
         return 1
 
     print(f"\n[OK] Los 3 emails fueron aceptados por Resend.")
-    print(f"     Revisá tu inbox en {to} (puede demorar 30-60s).")
+    print(f"     Revisa tu inbox en {to} (puede demorar 30-60s).")
     print(f"     Si no llegan, revisa la carpeta de Spam y el dashboard de Resend -> Logs.\n")
     return 0
 

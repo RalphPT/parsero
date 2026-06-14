@@ -1,4 +1,5 @@
-"""Webhook de Lemon Squeezy. Verifica firma HMAC y actualiza el tenant."""
+# Webhook de Lemon Squeezy. La firma viene en X-Signature, HMAC-SHA256 del
+# body con LEMONSQUEEZY_WEBHOOK_SECRET. Si no matchea -> 401 y a otra cosa.
 import hashlib
 import hmac
 import json
@@ -22,7 +23,6 @@ router = APIRouter(include_in_schema=False)
 
 
 def _verify_signature(body: bytes, signature_header: Optional[str]) -> None:
-    """HMAC-SHA256(body, secret) debe coincidir con X-Signature. Compare timing-safe."""
     settings = get_settings()
     if not settings.lemonsqueezy_webhook_secret:
         raise HTTPException(
@@ -62,11 +62,8 @@ def _parse_renews_at(s: Optional[str]) -> Optional[datetime]:
 async def _resolve_tenant(
     db: AsyncSession, payload: dict
 ) -> Optional[Tenant]:
-    """
-    Encuentra el tenant del evento. Prefiere `meta.custom_data.tenant_id`
-    (que embebemos al crear el checkout). Como fallback, busca por
-    `lemon_customer_id` que ya hayamos persistido antes.
-    """
+    # Prefiere meta.custom_data.tenant_id (lo embebemos al crear el checkout).
+    # Fallback: lemon_customer_id que ya hayamos guardado en un evento anterior.
     repo = TenantRepository(db)
     custom = payload.get("meta", {}).get("custom_data") or {}
     raw_id = custom.get("tenant_id")
@@ -113,8 +110,8 @@ async def lemonsqueezy_webhook(
 
     tenant = await _resolve_tenant(db, payload)
     if tenant is None:
-        # Aceptamos el evento (200) para que Lemon Squeezy no reintente
-        # eternamente - pero logueamos para investigar
+        # Devolvemos 200 a propósito - si LS no recibe 2xx reintenta y vuelve
+        # eternamente. Mejor logueamos y seguimos.
         logger.warning(
             "Webhook %s sin tenant resoluble: %s",
             event,
@@ -146,7 +143,7 @@ async def lemonsqueezy_webhook(
 
     elif event == "subscription_payment_failed":
         tenant.subscription_status = "past_due"
-        # TODO: enviar email al cliente avisando del fallo de pago
+        # TODO: mandarle email avisando, sino se entera cuando ya está past_due
 
     elif event in ("subscription_payment_success", "subscription_payment_recovered"):
         tenant.subscription_status = attrs.get("status") or "active"
