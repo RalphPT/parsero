@@ -16,7 +16,9 @@ from app.core.passwords import hash_password, verify_password
 from app.core.rate_limits import RATE_LIMITS_PER_MINUTE
 from app.db.models.tenant import Tenant, TenantPlan
 from app.db.repositories.api_key import ApiKeyRepository
+from app.db.repositories.extraction_job import ExtractionJobRepository
 from app.db.repositories.tenant import TenantRepository
+from app.db.repositories.usage_log import UsageLogRepository
 from app.db.session import get_db
 from app.services.email_service import get_email_service
 from app.services.lemonsqueezy_service import (
@@ -405,32 +407,11 @@ async def dashboard(
 
     keys = await ApiKeyRepository(db).list_for_tenant(tenant.id)
 
-    # Usage del mes actual
-    from sqlalchemy import func, select
-    from app.db.models.usage_log import UsageLog
-    from app.db.models.extraction_job import ExtractionJob
-    period = datetime.utcnow().strftime("%Y-%m")
-    stmt = select(
-        func.coalesce(func.sum(UsageLog.input_tokens), 0).label("input_tokens"),
-        func.coalesce(func.sum(UsageLog.output_tokens), 0).label("output_tokens"),
-        func.count(UsageLog.id).label("extractions_count"),
-    ).where(UsageLog.tenant_id == tenant.id, UsageLog.billing_period == period)
-    row = (await db.execute(stmt)).one()
-    usage = {
-        "billing_period": period,
-        "extractions_count": int(row.extractions_count or 0),
-        "input_tokens": int(row.input_tokens or 0),
-        "output_tokens": int(row.output_tokens or 0),
-    }
-
-    # Últimas 20 extracciones del tenant (historial)
-    jobs_stmt = (
-        select(ExtractionJob)
-        .where(ExtractionJob.tenant_id == tenant.id)
-        .order_by(ExtractionJob.created_at.desc())
-        .limit(20)
+    period = datetime.now(timezone.utc).strftime("%Y-%m")
+    usage = await UsageLogRepository(db).monthly_summary(tenant.id, period)
+    recent_jobs, _ = await ExtractionJobRepository(db).list_for_tenant(
+        tenant.id, limit=20
     )
-    recent_jobs = (await db.execute(jobs_stmt)).scalars().all()
 
     rate_limit = RATE_LIMITS_PER_MINUTE.get(tenant.plan, 0)
     new_api_key = request.query_params.get("new_key")

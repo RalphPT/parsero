@@ -1,17 +1,24 @@
 """Endpoints del dashboard: keys + usage del mes. Auth con cookie o JWT."""
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import func, select
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.dependencies import get_current_user_jwt
 from app.db.models.tenant import Tenant
-from app.db.models.usage_log import UsageLog
+from app.db.models.extraction_job import ExtractionJob
 from app.db.repositories.api_key import ApiKeyRepository
+from app.db.repositories.extraction_job import ExtractionJobRepository
+from app.db.repositories.extraction_result import ExtractionResultRepository
+from app.db.repositories.usage_log import UsageLogRepository
 from app.db.session import get_db
-from app.schemas.account import UsageSummary
+from app.schemas.account import (
+    JobDetailResponse,
+    JobListResponse,
+    JobSummary,
+    UsageSummary,
+)
 from app.schemas.api_key import (
     ApiKeyCreate,
     ApiKeyCreatedResponse,
@@ -80,20 +87,54 @@ async def my_usage(
     db: AsyncSession = Depends(get_db),
 ):
     """Suma de extracciones + tokens del mes actual (formato YYYY-MM)."""
-    period = datetime.utcnow().strftime("%Y-%m")
-    stmt = select(
-        func.coalesce(func.sum(UsageLog.input_tokens), 0).label("input_tokens"),
-        func.coalesce(func.sum(UsageLog.output_tokens), 0).label("output_tokens"),
-        func.count(UsageLog.id).label("extractions_count"),
-    ).where(
-        UsageLog.tenant_id == tenant.id,
-        UsageLog.billing_period == period,
+    period = datetime.now(timezone.utc).strftime("%Y-%m")
+    return await UsageLogRepository(db).monthly_summary(tenant.id, period)
+
+
+def _job_summary(job: ExtractionJob) -> JobSummary:
+    return JobSummary(
+        id=job.id,
+        status=job.status.value,
+        schema_type=job.schema_type.value,
+        source_url=job.source_url,
+        input_tokens=job.input_tokens,
+        output_tokens=job.output_tokens,
+        duration_ms=job.duration_ms,
+        error_message=job.error_message,
+        created_at=job.created_at,
+        completed_at=job.completed_at,
     )
-    row = (await db.execute(stmt)).one()
-    return UsageSummary(
-        billing_period=period,
-        extractions_count=int(row.extractions_count or 0),
-        input_tokens=int(row.input_tokens or 0),
-        output_tokens=int(row.output_tokens or 0),
-        total_tokens=int((row.input_tokens or 0) + (row.output_tokens or 0)),
+
+
+@router.get("/account/jobs", response_model=JobListResponse)
+async def list_my_jobs(
+    limit: int = Query(default=20, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    tenant: Tenant = Depends(get_current_user_jwt),
+    db: AsyncSession = Depends(get_db),
+):
+    jobs, total = await ExtractionJobRepository(db).list_for_tenant(
+        tenant.id, limit=limit, offset=offset
+    )
+    return JobListResponse(
+        items=[_job_summary(j) for j in jobs],
+        total=total,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get("/account/jobs/{job_id}", response_model=JobDetailResponse)
+async def get_my_job(
+    job_id: UUID,
+    tenant: Tenant = Depends(get_current_user_jwt),
+    db: AsyncSession = Depends(get_db),
+):
+    job = await ExtractionJobRepository(db).get_for_tenant(job_id, tenant.id)
+    if job is None:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, "Job no encontrado")
+    result = await ExtractionResultRepository(db).get_by_job_id(job_id)
+    return JobDetailResponse(
+        **_job_summary(job).model_dump(),
+        data=result.data if result else None,
     )

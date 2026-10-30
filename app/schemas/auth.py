@@ -60,3 +60,4 @@ class AccountResponse(BaseModel):
     is_active: bool
     email_verified_at: Optional[datetime]
     created_at: datetime
+    rate_limit_per_minute: Optional[int] = None  # None = ilimitado

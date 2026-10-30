@@ -35,11 +35,12 @@ app = FastAPI(
     ),
 )
 
-# FIXME: en prod allow_origins queda vacío -> bloquea todo cross-origin.
-# Cuando tenga dominio armado, listar aquí ["https://parsero.dev", ...]
+_cors_origins = settings.cors_origins_list or (
+    ["*"] if not settings.is_production else []
+)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if not settings.is_production else [],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

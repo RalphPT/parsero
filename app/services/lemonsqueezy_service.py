@@ -55,7 +55,7 @@ class LemonSqueezyService:
                     "checkout_options": {"embed": False},
                     "product_options": {
                         "redirect_url": success_redirect_url
-                        or f"{get_settings().public_base_url}/dashboard?upgraded=1"
+                        or f"{get_settings().frontend_base_url}/dashboard?upgraded=1"
                     },
                 },
                 "relationships": {

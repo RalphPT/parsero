@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 from datetime import datetime, timezone
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models.extraction_job import ExtractionJob, JobStatus, SchemaType
@@ -33,6 +33,32 @@ class ExtractionJobRepository:
 
     async def get(self, job_id: UUID) -> Optional[ExtractionJob]:
         return await self.db.get(ExtractionJob, job_id)
+
+    async def get_for_tenant(
+        self, job_id: UUID, tenant_id: UUID
+    ) -> Optional[ExtractionJob]:
+        job = await self.get(job_id)
+        if job is None or job.tenant_id != tenant_id:
+            return None
+        return job
+
+    async def list_for_tenant(
+        self, tenant_id: UUID, *, limit: int = 20, offset: int = 0
+    ) -> tuple[list[ExtractionJob], int]:
+        total = await self.db.scalar(
+            select(func.count(ExtractionJob.id)).where(
+                ExtractionJob.tenant_id == tenant_id
+            )
+        )
+        stmt = (
+            select(ExtractionJob)
+            .where(ExtractionJob.tenant_id == tenant_id)
+            .order_by(ExtractionJob.created_at.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+        rows = (await self.db.execute(stmt)).scalars().all()
+        return list(rows), int(total or 0)
 
     async def get_by_hash_and_schema(
         self, tenant_id: UUID, source_hash: str, schema_type: str

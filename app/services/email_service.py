@@ -16,7 +16,7 @@ class EmailService:
         settings = get_settings()
         self._from = settings.email_from
         self._api_key = settings.resend_api_key
-        self._base_url = settings.public_base_url
+        self._base_url = settings.frontend_base_url
         if self._api_key:
             resend.api_key = self._api_key
 

@@ -1,14 +1,15 @@
 import logging
 
 import jwt as pyjwt
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
 
-from app.api.dependencies import get_current_user_jwt
+from app.api.dependencies import SESSION_COOKIE_NAME, get_current_user_jwt
 from app.core.jwt_tokens import create_token, decode_token
 from app.core.passwords import hash_password, verify_password
+from app.core.rate_limits import RATE_LIMITS_PER_MINUTE
 from app.db.models.tenant import Tenant, TenantPlan
 from app.db.repositories.api_key import ApiKeyRepository
 from app.db.repositories.tenant import TenantRepository
@@ -183,6 +184,16 @@ async def resend_verification(
     return {"message": "Si la cuenta existe y no está verificada, te enviamos un email"}
 
 
+@router.post("/auth/logout", status_code=status.HTTP_204_NO_CONTENT)
+async def logout(response: Response):
+    response.delete_cookie(SESSION_COOKIE_NAME, path="/")
+    response.status_code = status.HTTP_204_NO_CONTENT
+    return response
+
+
 @router.get("/account/me", response_model=AccountResponse)
 async def get_account(tenant: Tenant = Depends(get_current_user_jwt)):
-    return tenant
+    account = AccountResponse.model_validate(tenant)
+    limit = RATE_LIMITS_PER_MINUTE.get(tenant.plan, 0)
+    account.rate_limit_per_minute = limit if limit > 0 else None
+    return account

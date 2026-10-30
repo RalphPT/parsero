@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     email_from: str = "Parsero <noreply@parsero.dev>"
     public_base_url: str = "http://localhost:8000"
 
+    frontend_url: Optional[str] = None  # si falta, se usa public_base_url
+    cors_origins: str = ""  # separados por coma
+
     # Lemon Squeezy
     lemonsqueezy_api_key: Optional[str] = None
     lemonsqueezy_webhook_secret: Optional[str] = None
@@ -55,6 +58,14 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.app_env == "production"
+
+    @property
+    def frontend_base_url(self) -> str:
+        return (self.frontend_url or self.public_base_url).rstrip("/")
+
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [o.strip().rstrip("/") for o in self.cors_origins.split(",") if o.strip()]
 
 
 @lru_cache
